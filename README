@@ -22,6 +22,12 @@ Download the latest python-twitter library from:
 
   http://code.google.com/p/python-twitter/
 
+Fetch the dependencies:
+
+{{{
+  $ easy_setup -U simplejson
+}}}
+
 Untar the source distribution and run:
 
 {{{
