@@ -14,6 +14,6 @@ setuptools.setup(
   license='Apache License 2.0',
   url='http://code.google.com/p/python-twitter',
   keywords='twitter api',
-  install_requires = [ 'simplejson >= 1.4' ],
+  install_requires = [ 'simplejson >= 1.3' ],
   test_suite = 'twitter_test.suite'
   )
