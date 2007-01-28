@@ -510,31 +510,32 @@ class Api(object):
   
   Example usage:
 
-    import twitter
+    To create an instance of the twitter.Api class:
 
-    api = twitter.Api()
+      >>> import twitter
+      >>> api = twitter.Api()
 
-    # Print the most recent public twitters
-    statuses = api.GetPublicTimeline()
-    for s in statuses:
-      print '%s said "%s" %s' % (s.user.name, s.text, s.relative_created_at)
+    To fetch the most recently posted public twitter status messages:
 
-    # Print your friends twitters
-    for s in api.GetFriendsTimeline(username, password):
-      print '%s said "%s" %s' % (s.user.name, s.text, s.relative_created_at)
+      >>> statuses = api.GetPublicTimeline()
+      >>> print [s.user.name for s in statuses]
+      [u'DeWitt', u'Kesuke Miyagi', u'ev', u'Buzz Andersen', u'Biz Stone'] #...
 
-    # Print all of the recent headlines from the user 'googlenews'
-    statuses = api.GetPublicTimeline()
-    news = [s.text for s in statuses if s.user.screen_name == 'googlenews']
-    print '\n'.join(news)
+    To fetch a single user's public status messages:
 
-    # Print your last public twitter
-    statuses = api.GetUserTimeline(id, count=1):
-    status = status[0]
-    print 'I said "%s" %s' % (status.text, status.relative_created_at)
+      >>> statuses = api.GetUserTimeline(id)
+      >>> print [s.text for s in statuses]
 
-    # Post a twitter message
-    twitter.Api.PostUpdate(username, password, "Just a test")
+    To fetch a list a user's friends:
+
+      >>> users = api.GetFriends(username, password)
+      >>> print [u.name for u in users]
+
+    To post a twitter status message:
+ 
+      >>> status = api.PostUpdate(username, password, 'I love python-twitter!')
+      >>> print status.text
+      I love python-twitter!
   '''
 
   DEFAULT_CACHE_TIMEOUT = 60 # cache for 1 minute 

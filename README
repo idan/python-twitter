@@ -86,10 +86,12 @@
     To fetch a single user's public status messages:
 
       >>> statuses = api.GetUserTimeline(id)
+      >>> print [s.text for s in statuses]
 
     To fetch a list a user's friends:
 
       >>> users = api.GetFriends(username, password)
+      >>> print [u.name for u in users]
 
     To post a twitter status message:
  
