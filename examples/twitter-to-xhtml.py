@@ -1,6 +1,8 @@
 #!/usr/bin/python
 
-# Load the latest update for a Twitter user and leave it in an XHTML fragment
+'''Load the latest update for a Twitter user and leave it in an XHTML fragment'''
+
+__author__ = 'dewitt@google.com'
 
 import getopt
 import sys
