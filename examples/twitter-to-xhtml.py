@@ -10,7 +10,7 @@ TEMPLATE = """
 <div class="twitter">
   <span class="twitter-user"><a href="http://twitter.com/%s">Twitter</a>: </span>
   <span class="twitter-text">%s</span>
-  <span class="twitter-relative-created-at"><a href="http://twitter.com/dewitt/statuses/%s">Posted %s</a></span>
+  <span class="twitter-relative-created-at"><a href="http://twitter.com/%s/statuses/%s">Posted %s</a></span>
 </div>
 """
 
@@ -30,7 +30,7 @@ def FetchTwitter(twitterid, output):
   assert int(twitterid)
   statuses = twitter.Api().GetUserTimeline(twitterid, count=1)
   s = statuses[0]
-  xhtml = TEMPLATE % (s.user.screen_name, s.text, s.id, s.relative_created_at)
+  xhtml = TEMPLATE % (s.user.screen_name, s.text, s.user.screen_name, s.id, s.relative_created_at)
   if output:
     Save(xhtml, output)
   else:
