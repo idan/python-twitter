@@ -35,6 +35,24 @@ Untar the source distribution and run:
   $ python setup.py install
 }}}
 
+==Getting the code==
+
+View the trunk at:
+
+  http://python-twitter.googlecode.com/svn/trunk/
+
+Check out the latest development version anonymously with:
+
+{{{
+  $ svn checkout http://python-twitter.googlecode.com/svn/trunk/ python-twitter
+}}}
+
+==Documentation==
+
+View the last release API documentation at:
+
+  http://static.unto.net/python-twitter/0.1/doc/twitter.html
+
 ==Using==
 
 The library provides a python wrapper around the Twitter API and

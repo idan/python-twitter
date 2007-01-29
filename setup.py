@@ -7,7 +7,7 @@ import setuptools
 
 setuptools.setup(
   name = "python-twitter",
-  version = "0.1",
+  version = "0.2-dev",
   py_modules = ['twitter'],
   author='DeWitt Clinton',
   author_email='dewitt@google.com',
