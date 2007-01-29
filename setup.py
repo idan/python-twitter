@@ -1,6 +1,8 @@
 from ez_setup import use_setuptools
 use_setuptools()
 
+import glob
+import os
 import setuptools
 
 setuptools.setup(
@@ -17,6 +19,5 @@ setuptools.setup(
   install_requires = [ 'simplejson >= 1.5' ],
   test_suite = 'twitter_test.suite',
   zip_safe = True,
-  data_files = [['doc', ['doc/twitter.html']]]
   )
 
