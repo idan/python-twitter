@@ -63,7 +63,10 @@ class Status(object):
     self.id = id
     self.text = text
     self.user = user
-    self.now = now || time.localtime()
+    if now:
+      self.now = now
+    else:
+      self.now = time.localtime()
 
   def GetCreatedAt(self):
     '''Get the time this status message was posted.
