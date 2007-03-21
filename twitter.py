@@ -93,7 +93,7 @@ class Status(object):
     Returns:
       The time this status message was posted, in seconds since the epoch.
     '''
-    return #
+    return time.mktime(time.strptime(self.created_at, '%a %b %d %H:%M:%S +0000 %Y'))
 
   created_at_in_seconds = property(GetCreatedAtInSeconds,
                                    doc="The time this status message was "
@@ -143,25 +143,30 @@ class Status(object):
     Returns:
       A human readable string representing the posting time
     '''
-    # Thanks to bear
-    parsed = mktime(strptime(self.created_at, '%a %b %d %H:%M:%S %Z %Y'))
-    delta  = this.now - parsed
+    fudge = 1.25
+    delta  = self.now - self.created_at_in_seconds
 
-    if delta < 60:
-      return 'less than a minute ago'
-    elif delta < 120:
+    if delta < (1 * fudge):
+      return 'about a second ago'
+    elif delta < (60 * (1/fudge)):
+      return 'about %d seconds ago' % (delta)
+    elif delta < (60 * fudge):
       return 'about a minute ago'
-    elif delta < _partialMinute:
-      return '%d minutes ago' % (delta / 60)
-    elif delta < _partialHour:
+    elif delta < (60 * 60 * (1/fudge)):
+      return 'about %d minutes ago' % (delta / 60)
+    elif delta < (60 * 60 * fudge):
       return 'about an hour ago'
-    elif delta < _fullDay:
-      return 'about %d hours ago' % (delta / 3600)
-    elif delta < _twoDays:
-      return '1 day ago'
+    elif delta < (60 * 60 * 24 * (1/fudge)):
+      return 'about %d hours ago' % (delta / (60 * 60))
+    elif delta < (60 * 60 * 24 * fudge):
+      return 'about a day ago'
     else:
-      return '%d days ago' % (delta / 86400)
+      return 'about %d days ago' % (delta / (60 * 60 * 24))
 
+  relative_created_at = property(GetRelativeCreatedAt,
+                                 doc='Get a human readable string representing'
+                                     'the posting time')
+  
   def GetUser(self):
     '''Get a twitter.User reprenting the entity posting this status message.
 
@@ -182,6 +187,33 @@ class Status(object):
                   doc='A twitter.User reprenting the entity posting this '
                       'status message')
 
+  def GetNow(self):
+    '''Get the wallclock time for this status message.
+
+    Used to calculate relative_created_at.  Defaults to the time
+    the object was instantiated.
+    
+    Returns:
+      Whatever the status instance believes the current time to be,
+      in seconds since the epoch.
+    '''
+    return self._now
+
+  def SetNow(self, now):
+    '''Set the wallclock time for this status message.
+
+    Used to calculate relative_created_at.  Defaults to the time
+    the object was instantiated.
+
+    Args:
+      now: The wallclock time for this instance.
+    '''
+    self._now = now
+
+  now = property(GetNow, SetNow,
+                 doc='The wallclock time for this status instance.')
+
+  
   def __ne__(self, other):
     return not self.__eq__(other)
 
@@ -228,8 +260,6 @@ class Status(object):
       data['id'] = self.id
     if self.text:
       data['text'] = self.text
-    if self.created_at: # required to calculate relative_created_at
-      data['relative_created_at'] = self.relative_created_at
     if self.user:
       data['user'] = self.user.AsDict()
     return data
@@ -250,7 +280,6 @@ class Status(object):
     return Status(created_at=data.get('created_at', None),
                   id=data.get('id', None),
                   text=data.get('text', None),
-                  relative_created_at=data.get('relative_created_at', None),
                   user=user)
 
 
