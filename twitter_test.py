@@ -15,7 +15,7 @@ import twitter
 
 class StatusTest(unittest.TestCase):
 
-  SAMPLE_JSON = '''{"created_at": "Fri Jan 26 23:17:14 +0000 2007", "id": 4391023, "relative_created_at": "about 10 minutes ago", "text": "Canvas. JC Penny. Three ninety-eight.", "user": {"description": "Canvas. JC Penny. Three ninety-eight.", "id": 718443, "location": "Okinawa, Japan", "name": "Kesuke Miyagi", "profile_image_url": "http:\/\/twitter.com\/system\/user\/profile_image\/718443\/normal\/kesuke.png", "screen_name": "kesuke", "url": "http:\/\/twitter.com\/kesuke"}}'''
+  SAMPLE_JSON = '''{"created_at": "Fri Jan 26 23:17:14 +0000 2007", "id": 4391023, "text": "Canvas. JC Penny. Three ninety-eight.", "user": {"description": "Canvas. JC Penny. Three ninety-eight.", "id": 718443, "location": "Okinawa, Japan", "name": "Kesuke Miyagi", "profile_image_url": "http:\/\/twitter.com\/system\/user\/profile_image\/718443\/normal\/kesuke.png", "screen_name": "kesuke", "url": "http:\/\/twitter.com\/kesuke"}}'''
 
   def _GetSampleUser(self):
     return twitter.User(id=718443,
@@ -32,15 +32,13 @@ class StatusTest(unittest.TestCase):
     return twitter.Status(created_at='Fri Jan 26 23:17:14 +0000 2007',
                           id=4391023,
                           text='Canvas. JC Penny. Three ninety-eight.',
-                          relative_created_at='about 10 minutes ago',
                           user=self._GetSampleUser())
-  
+
   def testInit(self):
     '''Test the twitter.Status constructor'''
     status = twitter.Status(created_at='Fri Jan 26 23:17:14 +0000 2007',
                             id=4391023,
                             text='Canvas. JC Penny. Three ninety-eight.',
-                            relative_created_at='about 10 minutes ago',
                             user=self._GetSampleUser())
 
   def testGettersAndSetters(self):
@@ -53,8 +51,6 @@ class StatusTest(unittest.TestCase):
     status.SetText('Canvas. JC Penny. Three ninety-eight.')
     self.assertEqual('Canvas. JC Penny. Three ninety-eight.',
                      status.GetText())
-    status.SetRelativeCreatedAt('about 10 minutes ago')
-    self.assertEqual('about 10 minutes ago', status.GetRelativeCreatedAt())
     status.SetUser(self._GetSampleUser())
     self.assertEqual(718443, status.GetUser().id)
 
@@ -65,8 +61,6 @@ class StatusTest(unittest.TestCase):
     self.assertEqual(1, status.id)
     status.created_at = 'Fri Jan 26 23:17:14 +0000 2007'
     self.assertEqual('Fri Jan 26 23:17:14 +0000 2007', status.created_at)
-    status.relative_created_at = 'about 10 minutes ago'
-    self.assertEqual('about 10 minutes ago', status.relative_created_at)
     status.user = self._GetSampleUser()
     self.assertEqual(718443, status.user.id)
 
@@ -80,9 +74,8 @@ class StatusTest(unittest.TestCase):
     status = self._GetSampleStatus()
     data = status.AsDict()
     self.assertEqual(4391023, data['id'])
-    self.assertEqual('Fri Jan 26 23:17:14 +0000 2007', data['created_at'])    
+    self.assertEqual('Fri Jan 26 23:17:14 +0000 2007', data['created_at'])
     self.assertEqual('Canvas. JC Penny. Three ninety-eight.', data['text'])
-    self.assertEqual('about 10 minutes ago', data['relative_created_at'])
     self.assertEqual(718443, data['user']['id'])
 
   def testEq(self):
@@ -91,10 +84,9 @@ class StatusTest(unittest.TestCase):
     status.created_at = 'Fri Jan 26 23:17:14 +0000 2007'
     status.id = 4391023
     status.text = 'Canvas. JC Penny. Three ninety-eight.'
-    status.relative_created_at = 'about 10 minutes ago'
     status.user = self._GetSampleUser()
     self.assertEqual(status, self._GetSampleStatus())
-    
+
   def testNewFromJsonDict(self):
     '''Test the twitter.Status NewFromJsonDict method'''
     data = simplejson.loads(StatusTest.SAMPLE_JSON)
@@ -103,14 +95,13 @@ class StatusTest(unittest.TestCase):
 
 class UserTest(unittest.TestCase):
 
-  SAMPLE_JSON = '''{"description": "Indeterminate things", "id": 673483, "location": "San Francisco, CA", "name": "DeWitt", "profile_image_url": "http:\/\/twitter.com\/system\/user\/profile_image\/673483\/normal\/me.jpg", "screen_name": "dewitt", "status": {"created_at": "Fri Jan 26 17:28:19 +0000 2007", "id": 4212713, "relative_created_at": "2 days ago", "text": "\\"Select all\\" and archive your Gmail inbox.  The page loads so much faster!"}, "url": "http:\/\/unto.net\/"}'''
+  SAMPLE_JSON = '''{"description": "Indeterminate things", "id": 673483, "location": "San Francisco, CA", "name": "DeWitt", "profile_image_url": "http:\/\/twitter.com\/system\/user\/profile_image\/673483\/normal\/me.jpg", "screen_name": "dewitt", "status": {"created_at": "Fri Jan 26 17:28:19 +0000 2007", "id": 4212713, "text": "\\"Select all\\" and archive your Gmail inbox.  The page loads so much faster!"}, "url": "http:\/\/unto.net\/"}'''
 
   def _GetSampleStatus(self):
     return twitter.Status(created_at='Fri Jan 26 17:28:19 +0000 2007',
                           id=4212713,
                           text='"Select all" and archive your Gmail inbox. '
-                               ' The page loads so much faster!',
-                          relative_created_at='2 days ago')
+                               ' The page loads so much faster!')
 
   def _GetSampleUser(self):
     return twitter.User(id=673483,
@@ -124,7 +115,7 @@ class UserTest(unittest.TestCase):
                         status=self._GetSampleStatus())
 
 
-  
+
   def testInit(self):
     '''Test the twitter.User constructor'''
     user = twitter.User(id=673483,
@@ -208,14 +199,14 @@ class UserTest(unittest.TestCase):
     user.url = 'http://unto.net/'
     user.status = self._GetSampleStatus()
     self.assertEqual(user, self._GetSampleUser())
-    
+
   def testNewFromJsonDict(self):
     '''Test the twitter.User NewFromJsonDict method'''
     data = simplejson.loads(UserTest.SAMPLE_JSON)
     user = twitter.User.NewFromJsonDict(data)
     self.assertEqual(self._GetSampleUser(), user)
-  
-  
+
+
 class FileCacheTest(unittest.TestCase):
 
   def testInit(self):
@@ -325,7 +316,7 @@ class ApiTest(unittest.TestCase):
     directory = os.path.dirname(os.path.abspath(__file__))
     test_data_dir = os.path.join(directory, 'testdata')
     return os.path.join(test_data_dir, filename)
-  
+
   def _OpenTestData(self, filename):
     return open(self._GetTestDataPath(filename))
 
@@ -335,10 +326,10 @@ class MockUrllib(object):
   def __init__(self):
     self._handlers = {}
     self.HTTPBasicAuthHandler = MockHTTPBasicAuthHandler
-   
+
   def AddHandler(self, url, callback):
     self._handlers[url] = callback
-    
+
   def build_opener(self, *handlers):
     return MockOpener(self._handlers)
 

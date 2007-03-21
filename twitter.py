@@ -5,7 +5,7 @@
 '''A library that provides a python interface to the Twitter API'''
 
 __author__ = 'dewitt@google.com'
-__version__ = '0.2-dev'
+__version__ = '0.2'
 
 
 import md5
@@ -28,24 +28,25 @@ class Status(object):
   The Status structure exposes the following properties:
 
     status.created_at
+    status.created_at_in_seconds # read only
     status.id
     status.text
-    status.relative_created_at
+    status.relative_created_at # read only
     status.user
   '''
   def __init__(self,
                created_at=None,
                id=None,
                text=None,
-               relative_created_at=None,
-               user=None):
+               user=None,
+               now=None):
     '''An object to hold a Twitter status message.
 
     This class is normally instantiated by the twitter.Api class and
     returned in a sequence.
 
     Note: Dates are posted in the form "Sat Jan 27 04:17:38 +0000 2007"
-    
+
     Args:
       created_at: The time this status message was posted
       id: The unique id of this status message
@@ -54,12 +55,15 @@ class Status(object):
         A human readable string representing the posting time
       user:
         A twitter.User instance representing the person posting the message
+      now:
+        The current time, if the client choses to set it.  Defaults to the
+        wall clock time.
     '''
-    self.created_at = created_at    
+    self.created_at = created_at
     self.id = id
     self.text = text
-    self.relative_created_at = relative_created_at
     self.user = user
+    self.now = now || time.localtime()
 
   def GetCreatedAt(self):
     '''Get the time this status message was posted.
@@ -79,6 +83,18 @@ class Status(object):
 
   created_at = property(GetCreatedAt, SetCreatedAt,
                         doc='The time this status message was posted.')
+
+  def GetCreatedAtInSeconds(self):
+    '''Get the time this status message was posted, in seconds since the epoch.
+
+    Returns:
+      The time this status message was posted, in seconds since the epoch.
+    '''
+    return #
+
+  created_at_in_seconds = property(GetCreatedAtInSeconds,
+                                   doc="The time this status message was "
+                                       "posted, in seconds since the epoch")
 
   def GetId(self):
     '''Get the unique id of this status message.
@@ -124,20 +140,24 @@ class Status(object):
     Returns:
       A human readable string representing the posting time
     '''
-    return self._relative_created_at
+    # Thanks to bear
+    parsed = mktime(strptime(self.created_at, '%a %b %d %H:%M:%S %Z %Y'))
+    delta  = this.now - parsed
 
-  def SetRelativeCreatedAt(self, relative_created_at):
-    '''Set a human readable string representing the posting time
-
-    Args:
-      relative_created_at:
-        A human readable string representing the posting time
-    '''
-    self._relative_created_at = relative_created_at
-
-  relative_created_at = property(GetRelativeCreatedAt, SetRelativeCreatedAt,
-                                 doc='A human readable string representing '
-                                     'the posting time')
+    if delta < 60:
+      return 'less than a minute ago'
+    elif delta < 120:
+      return 'about a minute ago'
+    elif delta < _partialMinute:
+      return '%d minutes ago' % (delta / 60)
+    elif delta < _partialHour:
+      return 'about an hour ago'
+    elif delta < _fullDay:
+      return 'about %d hours ago' % (delta / 3600)
+    elif delta < _twoDays:
+      return '1 day ago'
+    else:
+      return '%d days ago' % (delta / 86400)
 
   def GetUser(self):
     '''Get a twitter.User reprenting the entity posting this status message.
@@ -167,19 +187,18 @@ class Status(object):
       return other and \
              self.created_at == other.created_at and \
              self.id == other.id and \
-             self.relative_created_at == other.relative_created_at and \
              self.text == other.text and \
              self.user == other.user
     except AttributeError:
       return False
-  
+
   def __str__(self):
     '''A string representation of this twitter.Status instance.
 
     The return value is the same as the JSON string representation.
 
     Returns:
-      A string representation of this twitter.Status instance.  
+      A string representation of this twitter.Status instance.
     '''
     return self.AsJsonString()
 
@@ -188,9 +207,9 @@ class Status(object):
 
     Returns:
       A JSON string representation of this twitter.Status instance
-   '''      
+   '''
     return simplejson.dumps(self.AsDict(), sort_keys=True)
-    
+
   def AsDict(self):
     '''A dict representation of this twitter.Status instance.
 
@@ -206,7 +225,7 @@ class Status(object):
       data['id'] = self.id
     if self.text:
       data['text'] = self.text
-    if self.relative_created_at:
+    if self.created_at: # required to calculate relative_created_at
       data['relative_created_at'] = self.relative_created_at
     if self.user:
       data['user'] = self.user.AsDict()
@@ -340,7 +359,7 @@ class User(object):
 
   location = property(GetLocation, SetLocation,
                       doc='The geographic location of this user.')
-  
+
   def GetDescription(self):
     '''Get the short text description of this user.
 
@@ -359,7 +378,7 @@ class User(object):
 
   description = property(GetDescription, SetDescription,
                          doc='The short text description of this user.')
-  
+
   def GetUrl(self):
     '''Get the homepage url of this user.
 
@@ -398,7 +417,7 @@ class User(object):
   profile_image_url= property(GetProfileImageUrl, SetProfileImageUrl,
                               doc='The url of the thumbnail of this user.')
 
-  
+
   def GetStatus(self):
     '''Get the latest twitter.Status of this user.
 
@@ -414,13 +433,13 @@ class User(object):
       status: The latest twitter.Status of this user
     '''
     self._status = status
-    
+
   status = property(GetStatus, SetStatus,
                   doc='The latest twitter.Status of this user.')
 
   def __ne__(self, other):
     return not self.__eq__(other)
-  
+
   def __eq__(self, other):
     try:
       return other and \
@@ -434,14 +453,14 @@ class User(object):
              self.status == other.status
     except AttributeError:
       return False
-    
+
   def __str__(self):
     '''A string representation of this twitter.User instance.
 
     The return value is the same as the JSON string representation.
 
     Returns:
-      A string representation of this twitter.User instance.  
+      A string representation of this twitter.User instance.
     '''
     return self.AsJsonString()
 
@@ -450,7 +469,7 @@ class User(object):
 
     Returns:
       A JSON string representation of this twitter.User instance
-   '''      
+   '''
     return simplejson.dumps(self.AsDict(), sort_keys=True)
 
   def AsDict(self):
@@ -507,7 +526,7 @@ class Api(object):
   '''A python interface into the Twitter API
 
   By default, the Api caches results for 1 minute.
-  
+
   Example usage:
 
     To create an instance of the twitter.Api class:
@@ -532,16 +551,16 @@ class Api(object):
       >>> print [u.name for u in users]
 
     To post a twitter status message:
- 
+
       >>> status = api.PostUpdate(username, password, 'I love python-twitter!')
       >>> print status.text
       I love python-twitter!
   '''
 
-  DEFAULT_CACHE_TIMEOUT = 60 # cache for 1 minute 
+  DEFAULT_CACHE_TIMEOUT = 60 # cache for 1 minute
 
   _API_REALM = 'Twitter API'
-  
+
   def __init__(self):
     '''Instantiate a new twitter.Api object.'''
     self._cache = _FileCache()
@@ -692,7 +711,7 @@ class Api(object):
   def _BuildUrl(self, url, path_elements=None, extra_params=None):
     # Break url into consituent parts
     (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(url)
-    
+
     # Add any additional path elements to the path
     if path_elements:
       # Filter out the path elements that have a value of None
@@ -700,7 +719,7 @@ class Api(object):
       if not path.endswith('/'):
         path += '/'
       path += '/'.join(p)
-    
+
     # Add any additional query parameters to the query string
     if extra_params and len(extra_params) > 0:
      # Filter out the parameters that have a value of None (but '' is okay)
@@ -712,7 +731,7 @@ class Api(object):
        query += '&' + extra_query
      else:
        query = extra_query
-       
+
     # Return the rebuilt URL
     return urlparse.urlunparse((scheme, netloc, path, params, query, fragment))
 
@@ -728,7 +747,7 @@ class Api(object):
     opener.addheaders = [('User-agent', self._user_agent)]
     return opener
 
-    
+
   def _FetchUrl(self,
                 url,
                 post_data=None,
@@ -741,9 +760,9 @@ class Api(object):
     Args:
       url: The URL to retrieve
       post_data: A string to be sent in the body of the request. [OPTIONAL]
-      parameters: A dict of key/value pairs that should added to 
+      parameters: A dict of key/value pairs that should added to
                   the query string. [OPTIONAL]
-      username: A HTTP Basic Auth username for this request 
+      username: A HTTP Basic Auth username for this request
       username: A HTTP Basic Auth password for this request
       no_cache: If true, overrides the cache on the current request
 
@@ -775,7 +794,7 @@ class Api(object):
         self._cache.Set(key, url_data)
       else:
         url_data = self._cache.Get(key)
-        
+
     # Always return the latest version
     return url_data
 
@@ -784,21 +803,21 @@ class _FileCacheError(Exception):
   '''Base exception class for FileCache related errors'''
 
 class _FileCache(object):
-    
+
   DEFAULT_ROOT_DIRECTORY = os.path.join(tempfile.gettempdir(), 'python.cache')
 
   DEPTH = 3
-    
+
   def __init__(self,root_directory=None):
     self._InitializeRootDirectory(root_directory)
-  
+
   def Get(self,key):
     path = self._GetPath(key)
     if os.path.exists(path):
       return open(path).read()
     else:
       return None
-    
+
   def Set(self,key,data):
     path = self._GetPath(key)
     directory = os.path.dirname(path)
@@ -814,22 +833,22 @@ class _FileCache(object):
       raise _FileCacheError('%s does not appear to live under %s' %
                             (path, self._root_directory))
     os.rename(temp_path, path)
-  
+
   def Remove(self,key):
     path = self._GetPath(key)
     if not path.startswith(self._root_directory):
       raise _FileCacheError('%s does not appear to live under %s' %
                             (path, self._root_directory ))
     if os.path.exists(path):
-      os.remove(path)  
-    
+      os.remove(path)
+
   def GetCachedTime(self,key):
     path = self._GetPath(key)
     if os.path.exists(path):
       return os.path.getmtime(path)
     else:
       return None
-  
+
   def _InitializeRootDirectory(self, root_directory):
     if not root_directory:
       root_directory = _FileCache.DEFAULT_ROOT_DIRECTORY
@@ -840,12 +859,12 @@ class _FileCache(object):
       raise _FileCacheError('%s exists but is not a directory' %
                             root_directory)
     self._root_directory = root_directory
-    
+
   def _GetPath(self,key):
     hashed_key = md5.new(key).hexdigest()
     return os.path.join(self._root_directory,
                         self._GetPrefix(hashed_key),
                         hashed_key)
-    
+
   def _GetPrefix(self,hashed_key):
     return os.path.sep.join(hashed_key[0:_FileCache.DEPTH])
