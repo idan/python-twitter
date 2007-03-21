@@ -74,6 +74,7 @@ class StatusTest(unittest.TestCase):
     return time.mktime(time.strptime(string, '%b %d %H:%M:%S %Y'))
 
   def testRelativeCreatedAt(self):
+    '''Test various permutations of Status relative_created_at'''
     status = twitter.Status(created_at='Fri Jan 01 12:00:00 +0000 2007')
     status.now = self._ParseDate('Jan 01 12:00:00 2007')
     self.assertEqual('about a second ago', status.relative_created_at)

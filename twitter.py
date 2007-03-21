@@ -65,8 +65,6 @@ class Status(object):
     self.user = user
     if now:
       self.now = now
-    else:
-      self.now = time.localtime()
 
   def GetCreatedAt(self):
     '''Get the time this status message was posted.
@@ -197,6 +195,8 @@ class Status(object):
       Whatever the status instance believes the current time to be,
       in seconds since the epoch.
     '''
+    if self._now is None:
+      self._now = time.localtime()
     return self._now
 
   def SetNow(self, now):
