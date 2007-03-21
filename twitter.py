@@ -754,15 +754,15 @@ class Api(object):
 
     # Add any additional query parameters to the query string
     if extra_params and len(extra_params) > 0:
-     # Filter out the parameters that have a value of None (but '' is okay)
-     p = dict([ (k, v) for k, v in extra_params.items() if v is not None])
-     # Convert the parameters into key=value&key=value form
-     extra_query = urllib.urlencode(p)
-     # Add it to the existing query
-     if query:
-       query += '&' + extra_query
-     else:
-       query = extra_query
+      # Filter out the parameters that have a value of None (but '' is okay)
+      p = dict([ (k, v) for k, v in extra_params.items() if v is not None])
+      # Convert the parameters into key=value&key=value form
+      extra_query = urllib.urlencode(p)
+      # Add it to the existing query
+      if query:
+        query += '&' + extra_query
+      else:
+        query = extra_query
 
     # Return the rebuilt URL
     return urlparse.urlunparse((scheme, netloc, path, params, query, fragment))
