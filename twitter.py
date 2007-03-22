@@ -63,8 +63,7 @@ class Status(object):
     self.id = id
     self.text = text
     self.user = user
-    if now:
-      self.now = now
+    self.now = now
 
   def GetCreatedAt(self):
     '''Get the time this status message was posted.
@@ -142,7 +141,7 @@ class Status(object):
       A human readable string representing the posting time
     '''
     fudge = 1.25
-    delta  = self.now - self.created_at_in_seconds
+    delta  = int(self.now) - int(self.created_at_in_seconds)
 
     if delta < (1 * fudge):
       return 'about a second ago'
@@ -196,7 +195,7 @@ class Status(object):
       in seconds since the epoch.
     '''
     if self._now is None:
-      self._now = time.localtime()
+      self._now = time.mktime(time.localtime())
     return self._now
 
   def SetNow(self, now):
@@ -612,21 +611,17 @@ class Api(object):
     data = simplejson.loads(json)
     return [Status.NewFromJsonDict(x) for x in data]
 
-  def GetUserTimeline(self, id, count=None):
+  def GetUserTimeline(self, user, count=None):
     '''Fetch the sequence of public twitter.Status messages for a single user.
 
     Args:
-      id:
-        the id of the user to be fetched (not their username, their id number)
+      user:
+        either the username (short_name) or id of the user to retrieve
       count: the number of status messages to retrieve
 
     Returns:
       A sequence of twitter.Status instances, one for each message up to count
     '''
-    try:
-      int(id)
-    except:
-      raise TwitterError("Twitter id must be an integer")
     try:
       if count:
         int(count)
@@ -636,7 +631,7 @@ class Api(object):
       parameters = {'count':count}
     else:
       parameters = {}
-    url = 'http://twitter.com/t/status/user_timeline/%s' % id
+    url = 'http://twitter.com/t/status/user_timeline/%s' % user
     json = self._FetchUrl(url, parameters=parameters)
     data = simplejson.loads(json)
     return [Status.NewFromJsonDict(x) for x in data]

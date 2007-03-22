@@ -27,10 +27,9 @@ def Usage():
   print '    -o --output : the output file [default: stdout]'
 
 
-def FetchTwitter(twitterid, output):
-  assert twitterid
-  assert int(twitterid)
-  statuses = twitter.Api().GetUserTimeline(twitterid, count=1)
+def FetchTwitter(user, output):
+  assert user
+  statuses = twitter.Api().GetUserTimeline(user, count=1)
   s = statuses[0]
   xhtml = TEMPLATE % (s.user.screen_name, s.text, s.user.screen_name, s.id, s.relative_created_at)
   if output:
@@ -50,7 +49,7 @@ def main():
     Usage()
     sys.exit(2)
   try:
-    twitterid = args[0]
+    user = args[0]
   except:
     Usage()
     sys.exit(2) 
@@ -61,7 +60,7 @@ def main():
       sys.exit(2)
     if o in ("-o", "--output"):
       output = a
-  FetchTwitter(twitterid, output)
+  FetchTwitter(user, output)
       
 if __name__ == "__main__":
   main()
