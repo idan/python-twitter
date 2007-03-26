@@ -89,10 +89,11 @@ To fetch the most recently posted public twitter status messages:
   [u'DeWitt', u'Kesuke Miyagi', u'ev', u'Buzz Andersen', u'Biz Stone'] #...
 }}}
 
-To fetch a single user's public status messages:
+To fetch a single user's public status messages, where "user" is either
+a Twitter "short name" or their user id.
 
 {{{
-  >>> statuses = api.GetUserTimeline(id)
+  >>> statuses = api.GetUserTimeline(user)
   >>> print [s.text for s in statuses]
 }}}
 
