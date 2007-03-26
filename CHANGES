@@ -1,8 +1,14 @@
+2007-03-26
+
+  Release 0.2
+  GetUserTimeline can accept userid or username.
+
 2007-03-21
 
   Calculate relative_created_at on the fly
 
 2007-01-28
 
+  Release 0.1
   Initial checkin of python-twitter
 
