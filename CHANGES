@@ -1,3 +1,7 @@
+2007-04-02
+
+  Fixed a bug when converting to gmtime to calculate relative_created_at
+
 2007-03-26
 
   Release 0.2

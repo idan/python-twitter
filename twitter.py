@@ -5,7 +5,7 @@
 '''A library that provides a python interface to the Twitter API'''
 
 __author__ = 'dewitt@google.com'
-__version__ = '0.2'
+__version__ = '0.3'
 
 
 import md5
@@ -195,7 +195,7 @@ class Status(object):
       in seconds since the epoch.
     '''
     if self._now is None:
-      self._now = time.mktime(time.localtime())
+      self._now = time.mktime(time.gmtime())
     return self._now
 
   def SetNow(self, now):
