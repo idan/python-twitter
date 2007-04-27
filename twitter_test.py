@@ -1,4 +1,6 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
 #
 # Copyright 2007 Google Inc. All Rights Reserved.
 
@@ -15,7 +17,7 @@ import twitter
 
 class StatusTest(unittest.TestCase):
 
-  SAMPLE_JSON = '''{"created_at": "Fri Jan 26 23:17:14 +0000 2007", "id": 4391023, "text": "Canvas. JC Penny. Three ninety-eight.", "user": {"description": "Canvas. JC Penny. Three ninety-eight.", "id": 718443, "location": "Okinawa, Japan", "name": "Kesuke Miyagi", "profile_image_url": "http:\/\/twitter.com\/system\/user\/profile_image\/718443\/normal\/kesuke.png", "screen_name": "kesuke", "url": "http:\/\/twitter.com\/kesuke"}}'''
+  SAMPLE_JSON = '''{"created_at": "Fri Jan 26 23:17:14 +0000 2007", "id": 4391023, "text": "A l\u00e9gp\u00e1rn\u00e1s haj\u00f3m tele van angoln\u00e1kkal.", "user": {"description": "Canvas. JC Penny. Three ninety-eight.", "id": 718443, "location": "Okinawa, Japan", "name": "Kesuke Miyagi", "profile_image_url": "http:\/\/twitter.com\/system\/user\/profile_image\/718443\/normal\/kesuke.png", "screen_name": "kesuke", "url": "http:\/\/twitter.com\/kesuke"}}'''
 
   def _GetSampleUser(self):
     return twitter.User(id=718443,
@@ -31,14 +33,14 @@ class StatusTest(unittest.TestCase):
   def _GetSampleStatus(self):
     return twitter.Status(created_at='Fri Jan 26 23:17:14 +0000 2007',
                           id=4391023,
-                          text='Canvas. JC Penny. Three ninety-eight.',
+                          text=u'A légpárnás hajóm tele van angolnákkal.',
                           user=self._GetSampleUser())
 
   def testInit(self):
     '''Test the twitter.Status constructor'''
     status = twitter.Status(created_at='Fri Jan 26 23:17:14 +0000 2007',
                             id=4391023,
-                            text='Canvas. JC Penny. Three ninety-eight.',
+                            text=u'A légpárnás hajóm tele van angolnákkal.',
                             user=self._GetSampleUser())
 
   def testGettersAndSetters(self):
@@ -51,8 +53,8 @@ class StatusTest(unittest.TestCase):
     self.assertEqual(1169882234, status.GetCreatedAtInSeconds())
     status.SetNow(1169882244)
     self.assertEqual("about 10 seconds ago", status.GetRelativeCreatedAt())
-    status.SetText('Canvas. JC Penny. Three ninety-eight.')
-    self.assertEqual('Canvas. JC Penny. Three ninety-eight.',
+    status.SetText(u'A légpárnás hajóm tele van angolnákkal.')
+    self.assertEqual(u'A légpárnás hajóm tele van angolnákkal.',
                      status.GetText())
     status.SetUser(self._GetSampleUser())
     self.assertEqual(718443, status.GetUser().id)
@@ -110,7 +112,7 @@ class StatusTest(unittest.TestCase):
     self.assertEqual('about 3 days ago', status.relative_created_at)
     status.now = self._ParseDate('Feb 04 12:00:00 2007')
     self.assertEqual('about 34 days ago', status.relative_created_at)
-    
+
   def testAsJsonString(self):
     '''Test the twitter.Status AsJsonString method'''
     self.assertEqual(StatusTest.SAMPLE_JSON,
@@ -122,7 +124,7 @@ class StatusTest(unittest.TestCase):
     data = status.AsDict()
     self.assertEqual(4391023, data['id'])
     self.assertEqual('Fri Jan 26 23:17:14 +0000 2007', data['created_at'])
-    self.assertEqual('Canvas. JC Penny. Three ninety-eight.', data['text'])
+    self.assertEqual(u'A légpárnás hajóm tele van angolnákkal.', data['text'])
     self.assertEqual(718443, data['user']['id'])
 
   def testEq(self):
@@ -130,7 +132,7 @@ class StatusTest(unittest.TestCase):
     status = twitter.Status()
     status.created_at = 'Fri Jan 26 23:17:14 +0000 2007'
     status.id = 4391023
-    status.text = 'Canvas. JC Penny. Three ninety-eight.'
+    status.text = u'A légpárnás hajóm tele van angolnákkal.'
     status.user = self._GetSampleUser()
     self.assertEqual(status, self._GetSampleStatus())
 

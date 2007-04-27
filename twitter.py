@@ -163,7 +163,7 @@ class Status(object):
   relative_created_at = property(GetRelativeCreatedAt,
                                  doc='Get a human readable string representing'
                                      'the posting time')
-  
+
   def GetUser(self):
     '''Get a twitter.User reprenting the entity posting this status message.
 
@@ -189,7 +189,7 @@ class Status(object):
 
     Used to calculate relative_created_at.  Defaults to the time
     the object was instantiated.
-    
+
     Returns:
       Whatever the status instance believes the current time to be,
       in seconds since the epoch.
@@ -212,7 +212,7 @@ class Status(object):
   now = property(GetNow, SetNow,
                  doc='The wallclock time for this status instance.')
 
-  
+
   def __ne__(self, other):
     return not self.__eq__(other)
 

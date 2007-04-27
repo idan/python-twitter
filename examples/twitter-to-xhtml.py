@@ -4,6 +4,7 @@
 
 __author__ = 'dewitt@google.com'
 
+import codecs
 import getopt
 import sys
 import twitter
@@ -21,30 +22,32 @@ def Usage():
   print
   print '  This script fetches a users latest twitter update and stores'
   print '  the result in a file as an XHTML fragment'
-  print 
+  print
   print '  Options:'
-  print '    -h --help : print this help'
-  print '    -o --output : the output file [default: stdout]'
+  print '    --help -h : print this help'
+  print '    --output : the output file [default: stdout]'
 
 
 def FetchTwitter(user, output):
   assert user
-  statuses = twitter.Api().GetUserTimeline(user, count=1)
-  s = statuses[0]
+  statuses = twitter.Api().GetUserTimeline(user, count=2)
+  s = statuses[1]
   xhtml = TEMPLATE % (s.user.screen_name, s.text, s.user.screen_name, s.id, s.relative_created_at)
   if output:
     Save(xhtml, output)
   else:
-    print xhtml   
+    print xhtml
 
 
 def Save(xhtml, output):
-  out = file(output, 'w')
-  print >> out, xhtml       
-    
+  out = codecs.open(output, mode='w', encoding='ascii',
+                    errors='xmlcharrefreplace')
+  out.write(xhtml)
+  out.close()
+
 def main():
   try:
-    opts, args = getopt.gnu_getopt(sys.argv[1:], 'h', ['help', 'output='])
+    opts, args = getopt.gnu_getopt(sys.argv[1:], 'ho', ['help', 'output='])
   except getopt.GetoptError:
     Usage()
     sys.exit(2)
@@ -52,8 +55,8 @@ def main():
     user = args[0]
   except:
     Usage()
-    sys.exit(2) 
-  output = None 
+    sys.exit(2)
+  output = None
   for o, a in opts:
     if o in ("-h", "--help"):
       Usage()
@@ -61,6 +64,6 @@ def main():
     if o in ("-o", "--output"):
       output = a
   FetchTwitter(user, output)
-      
+
 if __name__ == "__main__":
   main()

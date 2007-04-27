@@ -1,3 +1,9 @@
+2007-04-27
+  
+  Modified examples/twitter-to-xhtml.py to handle unicode
+  Dropped dependency on setuptools (too complicated/buggy)
+  Added unicode test cases
+  
 2007-04-02
 
   Released 0.3.

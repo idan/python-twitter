@@ -22,17 +22,21 @@ Download the latest python-twitter library from:
 
   http://code.google.com/p/python-twitter/
 
-Fetch the dependencies:
+Install the dependencies:
 
-{{{
-  $ easy_setup -U simplejson
-}}}
+  http://cheeseshop.python.org/pypi/simplejson
 
 Untar the source distribution and run:
 
 {{{
-  $ python setup.py test
+  $ python setup.py build
   $ python setup.py install
+}}}
+
+Test the distribution:
+
+{{{
+  $ python twitter_test.py
 }}}
 
 ==Getting the code==
@@ -51,7 +55,7 @@ Check out the latest development version anonymously with:
 
 View the last release API documentation at:
 
-  http://static.unto.net/python-twitter/0.3/doc/twitter.html
+  http://static.unto.net/python-twitter/0.4/doc/twitter.html
 
 ==Using==
 
