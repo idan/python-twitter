@@ -860,6 +860,8 @@ class _FileCache(object):
     if not path.startswith(self._root_directory):
       raise _FileCacheError('%s does not appear to live under %s' %
                             (path, self._root_directory))
+    if os.path.exists(path):
+      os.remove(path)
     os.rename(temp_path, path)
 
   def Remove(self,key):
