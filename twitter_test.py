@@ -297,66 +297,88 @@ class FileCacheTest(unittest.TestCase):
     cache.Remove("foo")
 
 class ApiTest(unittest.TestCase):
+
   def setUp(self):
     self._urllib = MockUrllib()
-    api = twitter.Api()
+    api = twitter.Api(username='test', password='test')
     api.SetCache(NullCache())
     api.SetUrllib(self._urllib)
     self._api = api
 
   def testGetPublicTimeline(self):
     '''Test the twitter.Api GetPublicTimeline method'''
-    self._AddHandler('http://twitter.com/statuses/public_timeline.json',
+    self._AddHandler('http://twitter.com/statuses/public_timeline.json?since_id=12345',
                      curry(self._OpenTestData, 'public_timeline.json'))
-    statuses = self._api.GetPublicTimeline()
+    statuses = self._api.GetPublicTimeline(since_id=12345)
     # This is rather arbitrary, but spot checking is better than nothing
-    self.assertEqual(20463, statuses[0].user.id)
-    news = [s.text for s in statuses if s.user.screen_name == 'googlenews']
-    self.assertEqual(3, len(news))
+    self.assertEqual(20, len(statuses))
+    self.assertEqual(89497702, statuses[0].id)
 
   def testGetUserTimeline(self):
     '''Test the twitter.Api GetUserTimeline method'''
-    self._AddHandler('http://twitter.com/t/status/user_timeline/673483?count=1',
-                     curry(self._OpenTestData, 'user_timeline.json'))
-    statuses = self._api.GetUserTimeline(673483, count=1)
+    self._AddHandler('http://twitter.com/statuses/user_timeline/kesuke.json?count=1&since=Tue%2C+27+Mar+2007+22%3A55%3A48+GMT',
+                     curry(self._OpenTestData, 'user_timeline-kesuke.json'))
+    statuses = self._api.GetUserTimeline('kesuke', count=1, since='Tue, 27 Mar 2007 22:55:48 GMT')
     # This is rather arbitrary, but spot checking is better than nothing
-    self.assertEqual(4212713, statuses[0].id)
-    self.assertEqual(673483, statuses[0].user.id)
+    self.assertEqual(89512102, statuses[0].id)
+    self.assertEqual(718443, statuses[0].user.id)
 
   def testGetFriendsTimeline(self):
     '''Test the twitter.Api GetFriendsTimeline method'''
-    self._AddHandler('http://twitter.com/statuses/friends_timeline.json',
-                     curry(self._OpenTestData, 'friends_timeline.json'))
-    statuses = self._api.GetFriendsTimeline('kesuke', 'xxx')
+    self._AddHandler('http://twitter.com/statuses/friends_timeline/kesuke.json',
+                     curry(self._OpenTestData, 'friends_timeline-kesuke.json'))
+    statuses = self._api.GetFriendsTimeline('kesuke')
     # This is rather arbitrary, but spot checking is better than nothing
-    buzz = [s.text for s in statuses if s.user.screen_name == 'buzz']
-    self.assertEqual('Surprisingly strong 6k run in Golden Gate Park.', buzz[0])
+    self.assertEqual(20, len(statuses))
+    self.assertEqual(718443, statuses[0].user.id)
+
+  def testGetStatus(self):
+    '''Test the twitter.Api GetStatus method'''
+    self._AddHandler('http://twitter.com/statuses/show/89512102.json',
+                     curry(self._OpenTestData, 'show-89512102.json'))
+    status = self._api.GetStatus(89512102)
+    self.assertEqual(89512102, status.id)
+    self.assertEqual(718443, status.user.id)
+    
+  def testPostUpdate(self):
+    '''Test the twitter.Api PostUpdate method'''
+    self._AddHandler('http://twitter.com/statuses/update.json',
+                     curry(self._OpenTestData, 'update.json'))
+    status = self._api.PostUpdate(u'Моё судно на воздушной подушке полно угрей')
+    # This is rather arbitrary, but spot checking is better than nothing
+    self.assertEqual(u'Моё судно на воздушной подушке полно угрей', status.text)
+
+  def testGetReplies(self):
+    '''Test the twitter.Api GetReplies method'''
+    self._AddHandler('http://twitter.com/statuses/replies.json',
+                     curry(self._OpenTestData, 'replies.json'))
+    statuses = self._api.GetReplies()
+    self.assertEqual(36657062, statuses[0].id)
 
   def testGetFriends(self):
     '''Test the twitter.Api GetFriends method'''
     self._AddHandler('http://twitter.com/statuses/friends.json',
                      curry(self._OpenTestData, 'friends.json'))
-    users = self._api.GetFriends('kesuke', 'xxx')
-    # This is rather arbitrary, but spot checking is better than nothing
-    buzz = [u.status.text for u in users if u.screen_name == 'buzz']
-    self.assertEqual('Surprisingly strong 6k run in Golden Gate Park.', buzz[0])
+    users = self._api.GetFriends()
+    buzz = [u.status for u in users if u.screen_name == 'buzz']
+    self.assertEqual(89543882, buzz[0].id)
 
   def testGetFollowers(self):
     '''Test the twitter.Api GetFollowers method'''
     self._AddHandler('http://twitter.com/statuses/followers.json',
                      curry(self._OpenTestData, 'followers.json'))
-    users = self._api.GetFollowers('kesuke', 'xxx')
+    users = self._api.GetFollowers()
     # This is rather arbitrary, but spot checking is better than nothing
-    buzz = [u.status.text for u in users if u.screen_name == 'buzz']
-    self.assertEqual('Surprisingly strong 6k run in Golden Gate Park.', buzz[0])
+    alexkingorg = [u.status for u in users if u.screen_name == 'alexkingorg']
+    self.assertEqual(89554432, alexkingorg[0].id)
 
-  def testPostUpdate(self):
-    '''Test the twitter.Api PostUpdate method'''
-    self._AddHandler('http://twitter.com/statuses/update.json',
-                     curry(self._OpenTestData, 'update.json'))
-    status = self._api.PostUpdate('kesuke', 'xxx', 'This is a test')
-    # This is rather arbitrary, but spot checking is better than nothing
-    self.assertEqual('This is a test', status.text)
+  def testGetUser(self):
+    '''Test the twitter.Api GetUser method'''
+    self._AddHandler('http://twitter.com/users/show/dewitt.json',
+                     curry(self._OpenTestData, 'show-dewitt.json'))
+    user = self._api.GetUser('dewitt')
+    self.assertEqual('dewitt', user.screen_name)
+    self.assertEqual(89586072, user.status.id)
 
   def _AddHandler(self, url, callback):
     self._urllib.AddHandler(url, callback)

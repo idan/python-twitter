@@ -1,8 +1,20 @@
+2007-06-03
+  Username and password now set on twitter.Api, not individual method calls
+  Added support for SetCredentials and ClearCredentials on twitter.Api
+  Added support for optional since_id parameter on GetPublicTimeline
+  Added support for optional since parameter on GetUserTimeline 
+  Added support for optional since and user parameters on GetFriendsTimeline 
+  Added support for GetStatus ("statuses/show" in the twitter api)
+  Added support for GetReplies
+  Added support for optional user parameter on GetFriends 
+  Added support for GetUser ("users/show" in the twitter api)
+  
 2007-04-27
   
   Modified examples/twitter-to-xhtml.py to handle unicode
   Dropped dependency on setuptools (too complicated/buggy)
   Added unicode test cases
+  Fixed issue 2 "Rename needs an unlink in front"
   
 2007-04-02
 

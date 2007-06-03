@@ -560,7 +560,7 @@ class Api(object):
 
   Example usage:
 
-    To create an instance of the twitter.Api class:
+    To create an instance of the twitter.Api class, with no authentication:
 
       >>> import twitter
       >>> api = twitter.Api()
@@ -577,14 +577,19 @@ class Api(object):
       >>> statuses = api.GetUserTimeline(user)
       >>> print [s.text for s in statuses]
 
-    To fetch a list a user's friends:
+    To use authentication, instantiate the twitter.Api class with a
+    username and password:
 
-      >>> users = api.GetFriends(username, password)
+      >>> api = twitter.Api(username='twitter user', password='twitter pass')
+ 
+    To fetch your friends (after being authenticated):
+
+      >>> users = api.GetFriends()
       >>> print [u.name for u in users]
 
-    To post a twitter status message:
+    To post a twitter status message (after being authenticated):
 
-      >>> status = api.PostUpdate(username, password, 'I love python-twitter!')
+      >>> status = api.PostUpdate('I love python-twitter!')
       >>> print status.text
       I love python-twitter!
   '''
@@ -593,32 +598,82 @@ class Api(object):
 
   _API_REALM = 'Twitter API'
 
-  def __init__(self):
-    '''Instantiate a new twitter.Api object.'''
+  def __init__(self, username=None, password=None):
+    '''Instantiate a new twitter.Api object.
+
+    Args:
+      username: The username of the twitter account.  [optional]
+      password: The password for the twitter account. [optional]
+    '''
     self._cache = _FileCache()
     self._urllib = urllib2
     self._cache_timeout = Api.DEFAULT_CACHE_TIMEOUT
     self._user_agent = 'Python-urllib/%s (python-twitter/%s)' % \
                        (self._urllib.__version__, twitter.__version__)
+    self.SetCredentials(username, password)
 
-  def GetPublicTimeline(self):
+  def GetPublicTimeline(self, since_id=None):
     '''Fetch the sequnce of public twitter.Status message for all users.
 
+    Args:
+      since_id: 
+        Returns only public statuses with an ID greater than (that is,
+        more recent than) the specified ID. [Optional]
+ 
     Returns:
       An sequence of twitter.Status instances, one for each message
     '''
+    parameters = {}
+    if since_id:
+      parameters['since_id'] = since_id
     url = 'http://twitter.com/statuses/public_timeline.json'
-    json = self._FetchUrl(url)
+    json = self._FetchUrl(url,  parameters=parameters)
     data = simplejson.loads(json)
     return [Status.NewFromJsonDict(x) for x in data]
 
-  def GetUserTimeline(self, user, count=None):
+  def GetFriendsTimeline(self, user=None, since=None):
+    '''Fetch the sequence of twitter.Status messages for a user's friends
+
+    The twitter.Api instance must be authenticated if the user is private.
+
+    Args:
+      user: 
+        Specifies the ID or screen name of the user for whom to return
+        the friends_timeline.  If unspecified, the username and password 
+        must be set in the twitter.Api instance.  [optional]
+      since:
+        Narrows the returned results to just those statuses created
+        after the specified HTTP-formatted date. [optional]
+
+    Returns:
+      A sequence of twitter.Status instances, one for each message
+    '''
+    if user:
+      url = 'http://twitter.com/statuses/friends_timeline/%s.json' % user
+    elif not user and not self._username:
+      raise TwitterError("User must be specified if API is not authenticated.")
+    else:      
+      url = 'http://twitter.com/statuses/friends_timeline.json'
+    parameters = {}
+    if since:
+      parameters['since'] = since
+    json = self._FetchUrl(url, parameters=parameters)
+    data = simplejson.loads(json)
+    return [Status.NewFromJsonDict(x) for x in data]
+
+  def GetUserTimeline(self, user=None, count=None, since=None):
     '''Fetch the sequence of public twitter.Status messages for a single user.
+
+    The twitter.Api instance must be authenticated if the user is private.
 
     Args:
       user:
-        either the username (short_name) or id of the user to retrieve
-      count: the number of status messages to retrieve
+        either the username (short_name) or id of the user to retrieve.  If 
+        not specified, then the current authenticated user is used. [optional]
+      count: the number of status messages to retrieve [optional]
+      since:
+        Narrows the returned results to just those statuses created
+        after the specified HTTP-formatted date. [optional]
 
     Returns:
       A sequence of twitter.Status instances, one for each message up to count
@@ -628,66 +683,48 @@ class Api(object):
         int(count)
     except:
       raise TwitterError("Count must be an integer")
+    parameters = {}
     if count:
-      parameters = {'count':count}
+      parameters['count'] = count
+    if since:
+      parameters['since'] = since
+    if user:
+      url = 'http://twitter.com/statuses/user_timeline/%s.json' % user
+    elif not user and not self._username:
+      raise TwitterError("User must be specified if API is not authenticated.")
     else:
-      parameters = {}
-    url = 'http://twitter.com/t/status/user_timeline/%s' % user
+      url = 'http://twitter.com/statuses/user_timeline.json'
     json = self._FetchUrl(url, parameters=parameters)
     data = simplejson.loads(json)
     return [Status.NewFromJsonDict(x) for x in data]
+  
+  def GetStatus(self, id):
+    '''Returns a single status message.
 
-  def GetFriendsTimeline(self, username, password):
-    '''Fetch the sequence of twitter.Status messages for a user\'s friends
+    The twitter.Api instance must be authenticated if the status message is private.
 
     Args:
-      username: The username to be fetched
-      password: The password for the username to be fetched.
+      id: The numerical ID of the status you're trying to retrieve. 
 
     Returns:
-      A sequence of twitter.Status instances, one for each message
+      A twitter.Status instance representing that status message
     '''
-    url = 'http://twitter.com/statuses/friends_timeline.json'
-    json = self._FetchUrl(url, username=username, password=password)
+    try:
+      if id:
+        int(id)
+    except:
+      raise TwitterError("id must be an integer")
+    url = 'http://twitter.com/statuses/show/%s.json' % id
+    json = self._FetchUrl(url)
     data = simplejson.loads(json)
-    return [Status.NewFromJsonDict(x) for x in data]
+    return Status.NewFromJsonDict(data)
 
-  def GetFriends(self, username, password):
-    '''Fetch the sequence of twitter.User instances, one for each friend
+  def PostUpdate(self, text):
+    '''Post a twitter status message for the authenticated user.
+
+    The twitter.Api instance must be authenticated.
 
     Args:
-      username: The username whose friends should be fetched
-      password: The password for the username to be fetched.
-
-    Returns:
-      A sequence of twitter.User instances, one for each friend
-    '''
-    url = 'http://twitter.com/statuses/friends.json'
-    json = self._FetchUrl(url, username=username, password=password)
-    data = simplejson.loads(json)
-    return [User.NewFromJsonDict(x) for x in data]
-
-  def GetFollowers(self, username, password):
-    '''Fetch the sequence of twitter.User instances, one for each follower
-
-    Args:
-      username: The username whose followers should be fetched
-      password: The password for the username to be fetched.
-
-    Returns:
-      A sequence of twitter.User instances, one for each follower
-    '''
-    url = 'http://twitter.com/statuses/followers.json'
-    json = self._FetchUrl(url, username=username, password=password)
-    data = simplejson.loads(json)
-    return [User.NewFromJsonDict(x) for x in data]
-
-  def PostUpdate(self, username, password, text):
-    '''Post a twitter status message.
-
-    Args:
-      username: The username to post the status message
-      password: The password for the username to be posted
       text: The message text to be posted
 
     Returns:
@@ -695,14 +732,99 @@ class Api(object):
     '''
     url = 'http://twitter.com/statuses/update.json'
     post_data = 'status=%s' % text
+    if not self._username:
+      raise TwitterError("The twitter.Api instance must be authenticated.")
+    if len(text) > 160:
+      raise TwitterError("Text must be less than or equal to 160 characters.")
     json = self._FetchUrl(url,
                           post_data=post_data,
-                          username=username,
-                          password=password,
                           no_cache=True)
     data = simplejson.loads(json)
     return Status.NewFromJsonDict(data)
 
+  def GetReplies(self):
+    '''Get a sequence of status messages representing the 20 most recent
+    replies (status updates prefixed with @username) to the authenticating
+    user.
+
+    Returns:
+      A sequence of twitter.Status instances, one for each reply to the user.
+    '''    
+    url = 'http://twitter.com/statuses/replies.json'
+    if not self._username:
+      raise TwitterError("The twitter.Api instance must be authenticated.")
+    json = self._FetchUrl(url)
+    data = simplejson.loads(json)
+    return [Status.NewFromJsonDict(x) for x in data]
+
+  def GetFriends(self, user=None):
+    '''Fetch the sequence of twitter.User instances, one for each friend.
+
+    Args:
+      user: the username or id of the user whose friends you are fetching.  If
+      not specified, defaults to the authenticated user. [optional]
+
+    The twitter.Api instance must be authenticated.
+
+    Returns:
+      A sequence of twitter.User instances, one for each friend
+    '''
+    if not self._username:
+      raise TwitterError("twitter.Api instance must be authenticated")
+    if user:
+      url = 'http://twitter.com/statuses/friends/%s.json' % user
+    else:      
+      url = 'http://twitter.com/statuses/friends.json'
+    json = self._FetchUrl(url)
+    data = simplejson.loads(json)
+    return [User.NewFromJsonDict(x) for x in data]
+
+  def GetFollowers(self):
+    '''Fetch the sequence of twitter.User instances, one for each follower
+
+    The twitter.Api instance must be authenticated.
+
+    Returns:
+      A sequence of twitter.User instances, one for each follower
+    '''
+    if not self._username:
+      raise TwitterError("twitter.Api instance must be authenticated")
+    url = 'http://twitter.com/statuses/followers.json'
+    json = self._FetchUrl(url)
+    data = simplejson.loads(json)
+    return [User.NewFromJsonDict(x) for x in data]
+
+  def GetUser(self, user):
+    '''Returns a single user.
+
+    The twitter.Api instance must be authenticated.
+
+    Args:
+      user: The username or id of the user to retrieve.
+
+    Returns:
+      A twitter.User instance representing that user
+    '''
+    url = 'http://twitter.com/users/show/%s.json' % user
+    json = self._FetchUrl(url)
+    data = simplejson.loads(json)
+    return User.NewFromJsonDict(data)
+
+  def SetCredentials(self, username, password):
+    '''Set the username and password for this instance
+
+    Args:
+      username: The twitter username.
+      password: The twitter password.
+    '''
+    self._username = username
+    self._password = password
+
+  def ClearCredentials(self):
+    '''Clear the username and password for this instance
+    '''
+    self._username = None
+    self._password = None
 
   def SetCache(self, cache):
     '''Override the default cache.  Set to None to prevent caching.
@@ -763,7 +885,6 @@ class Api(object):
     # Return the rebuilt URL
     return urlparse.urlunparse((scheme, netloc, path, params, query, fragment))
 
-
   def _GetOpener(self, url, username=None, password=None):
     if username and password:
       handler = self._urllib.HTTPBasicAuthHandler()
@@ -775,13 +896,10 @@ class Api(object):
     opener.addheaders = [('User-agent', self._user_agent)]
     return opener
 
-
   def _FetchUrl(self,
                 url,
                 post_data=None,
                 parameters=None,
-                username=None,
-                password=None,
                 no_cache=None):
     """Fetch a URL, optionally caching for a specified time.
 
@@ -801,15 +919,15 @@ class Api(object):
     url = self._BuildUrl(url, extra_params=parameters)
 
     # Get a url opener that can handle basic auth
-    opener = self._GetOpener(url, username=username, password=password)
+    opener = self._GetOpener(url, username=self._username, password=self._password)
 
     # Open and return the URL immediately if we're not going to cache
     if no_cache or not self._cache or not self._cache_timeout:
       url_data = opener.open(url, post_data).read()
     else:
       # Unique keys are a combination of the url and the username
-      if username:
-        key = username + ':' + url
+      if self._username:
+        key = self._username + ':' + url
       else:
         key = url
 
