@@ -372,6 +372,15 @@ class ApiTest(unittest.TestCase):
     alexkingorg = [u.status for u in users if u.screen_name == 'alexkingorg']
     self.assertEqual(89554432, alexkingorg[0].id)
 
+  def testGetFeatured(self):
+    '''Test the twitter.Api GetFeatured method'''
+    self._AddHandler('http://twitter.com/statuses/featured.json',
+                     curry(self._OpenTestData, 'featured.json'))
+    users = self._api.GetFeatured()
+    # This is rather arbitrary, but spot checking is better than nothing
+    stevenwright = [u.status for u in users if u.screen_name == 'stevenwright']
+    self.assertEqual(86991742, stevenwright[0].id)
+   
   def testGetUser(self):
     '''Test the twitter.Api GetUser method'''
     self._AddHandler('http://twitter.com/users/show/dewitt.json',

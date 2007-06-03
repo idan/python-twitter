@@ -794,6 +794,20 @@ class Api(object):
     data = simplejson.loads(json)
     return [User.NewFromJsonDict(x) for x in data]
 
+  def GetFeatured(self):
+    '''Fetch the sequence of twitter.User instances featured on twitter.com
+
+    The twitter.Api instance must be authenticated.
+
+    Returns:
+      A sequence of twitter.User instances
+    '''
+    url = 'http://twitter.com/statuses/featured.json'
+    json = self._FetchUrl(url)
+    data = simplejson.loads(json)
+    return [User.NewFromJsonDict(x) for x in data]
+
+
   def GetUser(self, user):
     '''Returns a single user.
 

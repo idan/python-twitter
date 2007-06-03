@@ -8,6 +8,7 @@
   Added support for GetReplies
   Added support for optional user parameter on GetFriends 
   Added support for GetUser ("users/show" in the twitter api)
+  Added support for GetFeatured
   
 2007-04-27
   
