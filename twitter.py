@@ -5,7 +5,7 @@
 '''A library that provides a python interface to the Twitter API'''
 
 __author__ = 'dewitt@google.com'
-__version__ = '0.3'
+__version__ = '0.4'
 
 
 import md5
