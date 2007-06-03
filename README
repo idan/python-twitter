@@ -30,13 +30,8 @@ Untar the source distribution and run:
 
 {{{
   $ python setup.py build
-  $ python setup.py install
-}}}
-
-Test the distribution:
-
-{{{
   $ python twitter_test.py
+  $ python setup.py install
 }}}
 
 ==Getting the code==
