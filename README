@@ -80,6 +80,11 @@ To create an instance of the twitter.Api class:
   >>> api = twitter.Api()
 }}}
 
+To create an instance of the twitter.Api with login credentials (many API
+calls required the client to be authenticated):
+
+  >>> api = twitter.Api(username='username', password='password) 
+
 To fetch the most recently posted public twitter status messages:
 
 {{{
@@ -96,14 +101,14 @@ a Twitter "short name" or their user id.
   >>> print [s.text for s in statuses]
 }}}
 
-To fetch a list a user's friends:
+To fetch a list a user's friends (requires authentication):
 
 {{{
-  >>> users = api.GetFriends(username, password)
+  >>> users = api.GetFriends()
   >>> print [u.name for u in users]
 }}}
 
-To post a twitter status message:
+To post a twitter status message (requires authentication):
 
 {{{ 
   >>> status = api.PostUpdate(username, password, 'I love python-twitter!')

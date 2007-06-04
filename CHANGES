@@ -3,12 +3,13 @@
   Added support for SetCredentials and ClearCredentials on twitter.Api
   Added support for optional since_id parameter on GetPublicTimeline
   Added support for optional since parameter on GetUserTimeline 
-  Added support for optional since and user parameters on GetFriendsTimeline 
-  Added support for GetStatus ("statuses/show" in the twitter api)
+  Added support for optional since and user parameters on GetFriendsTimeline
+  Added support for GetStatus ("statuses/show" in the twitter web api)
   Added support for GetReplies
   Added support for optional user parameter on GetFriends 
-  Added support for GetUser ("users/show" in the twitter api)
+  Added support for GetUser ("users/show" in the twitter web api)
   Added support for GetFeatured
+  Added support for GetDirectMessages
   
 2007-04-27
   

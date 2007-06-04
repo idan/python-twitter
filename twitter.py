@@ -807,7 +807,6 @@ class Api(object):
     data = simplejson.loads(json)
     return [User.NewFromJsonDict(x) for x in data]
 
-
   def GetUser(self, user):
     '''Returns a single user.
 
@@ -823,6 +822,30 @@ class Api(object):
     json = self._FetchUrl(url)
     data = simplejson.loads(json)
     return User.NewFromJsonDict(data)
+
+  def GetDirectMessages(self, since=None):
+    '''Returns a list of the direct messages sent to the authenticating user.
+
+    The twitter.Api instance must be authenticated.
+
+    Args:  
+      since:
+        Narrows the returned results to just those statuses created
+        after the specified HTTP-formatted date. [optional]
+
+    Returns:
+      A sequence of twitter.Status instances
+    '''
+    url = 'http://twitter.com/direct_messages.json'
+    if not self._username:
+      raise TwitterError("The twitter.Api instance must be authenticated.")
+    parameters = {}
+    if since:
+      parameters['since'] = since
+    json = self._FetchUrl(url, parameters=parameters)
+    data = simplejson.loads(json)
+    return [Status.NewFromJsonDict(x) for x in data]
+ 
 
   def SetCredentials(self, username, password):
     '''Set the username and password for this instance

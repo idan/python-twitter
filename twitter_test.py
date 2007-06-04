@@ -380,6 +380,13 @@ class ApiTest(unittest.TestCase):
     # This is rather arbitrary, but spot checking is better than nothing
     stevenwright = [u.status for u in users if u.screen_name == 'stevenwright']
     self.assertEqual(86991742, stevenwright[0].id)
+
+  def testGetDirectMessages(self):
+    '''Test the twitter.Api GetDirectMessages method'''
+    self._AddHandler('http://twitter.com/direct_messages.json',
+                     curry(self._OpenTestData, 'direct_messages.json'))
+    statuses = self._api.GetDirectMessages()
+    self.assertEqual(u'A légpárnás hajóm tele van angolnákkal.', statuses[0].text)
    
   def testGetUser(self):
     '''Test the twitter.Api GetUser method'''
