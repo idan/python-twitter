@@ -1,6 +1,6 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
-#
+# -*- coding: utf-8 -*-#
+
 #
 # Copyright 2007 Google Inc. All Rights Reserved.
 
@@ -387,6 +387,14 @@ class ApiTest(unittest.TestCase):
                      curry(self._OpenTestData, 'direct_messages.json'))
     statuses = self._api.GetDirectMessages()
     self.assertEqual(u'A légpárnás hajóm tele van angolnákkal.', statuses[0].text)
+
+  def testPostDirectMessage(self):
+    '''Test the twitter.Api PostDirectMessage method'''
+    self._AddHandler('http://twitter.com/direct_messages/new.json',
+                     curry(self._OpenTestData, 'direct_messages-new.json'))
+    status = self._api.PostDirectMessage('test', u'Моё судно на воздушной подушке полно угрей')
+    # This is rather arbitrary, but spot checking is better than nothing
+    self.assertEqual(u'Моё судно на воздушной подушке полно угрей', status.text)
    
   def testGetUser(self):
     '''Test the twitter.Api GetUser method'''

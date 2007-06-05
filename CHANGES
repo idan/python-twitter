@@ -1,4 +1,5 @@
 2007-06-03
+  Fixed the bug that prevented unicode strings being posted
   Username and password now set on twitter.Api, not individual method calls
   Added support for SetCredentials and ClearCredentials on twitter.Api
   Added support for optional since_id parameter on GetPublicTimeline

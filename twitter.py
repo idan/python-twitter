@@ -552,6 +552,40 @@ class User(object):
                 url=data.get('url', None),
                 status=status)
 
+class DirectMessage(object):
+
+  def __init__(self,
+               created_at=None,
+               recipient_id=None,
+               sender_id=None,
+               text=None,
+               sender_screen_name=None,
+               id=None,
+               recipient_screen_name=None):
+    self.created_at = created_at
+    self.recipient_id = recipient_id
+    self.sender_id = sender_id
+    self.text = text
+    self.sender_screen_name = sender_screen_name
+    self.id = id
+    self.recipient_screen_name = recipient_screen_name
+
+  @staticmethod
+  def NewFromJsonDict(data):
+    '''Create a new instance based on a JSON dict.
+
+    Args:
+      data: A JSON dict, as converted from the JSON in the twitter API
+    Returns:
+      A twitter.DirectMessage instance
+    '''
+    return DirectMessage(created_at=data.get('created_at', None),
+                         recipient_id=data.get('recipient_id', None),
+                         sender_id=data.get('sender_id', None),
+                         text=data.get('text', None),
+                         sender_screen_name=data.get('sender_screen_name', None),
+                         id=data.get('id', None),
+                         recipient_screen_name=data.get('recipient_screen_name', None))
 
 class Api(object):
   '''A python interface into the Twitter API
@@ -720,24 +754,24 @@ class Api(object):
     return Status.NewFromJsonDict(data)
 
   def PostUpdate(self, text):
-    '''Post a twitter status message for the authenticated user.
+    '''Post a twitter status message from the authenticated user.
 
     The twitter.Api instance must be authenticated.
 
     Args:
-      text: The message text to be posted
+      text: The message text to be posted.  Must be less than 140 characters.
 
     Returns:
       A twitter.Status instance representing the message posted
     '''
-    url = 'http://twitter.com/statuses/update.json'
-    post_data = 'status=%s' % text
     if not self._username:
       raise TwitterError("The twitter.Api instance must be authenticated.")
-    if len(text) > 160:
-      raise TwitterError("Text must be less than or equal to 160 characters.")
+    if len(text) > 140:
+      raise TwitterError("Text must be less than or equal to 140 characters.")
+    url = 'http://twitter.com/statuses/update.json'
+    data = {'status': text}
     json = self._FetchUrl(url,
-                          post_data=post_data,
+                          data=data,
                           no_cache=True)
     data = simplejson.loads(json)
     return Status.NewFromJsonDict(data)
@@ -844,8 +878,31 @@ class Api(object):
       parameters['since'] = since
     json = self._FetchUrl(url, parameters=parameters)
     data = simplejson.loads(json)
-    return [Status.NewFromJsonDict(x) for x in data]
+    return [DirectMessage.NewFromJsonDict(x) for x in data]
  
+  def PostDirectMessage(self, user, text):
+    '''Post a twitter direct message from the authenticated user
+
+    The twitter.Api instance must be authenticated.
+
+    Args:
+      user: The ID or screen name of the recipient user.
+      text: The message text to be posted.  Must be less than 140 characters.
+
+    Returns:
+      A twitter.Status instance representing the message posted
+    '''
+    if len(text) > 140:
+      raise TwitterError("Text must be less than or equal to 140 characters.")
+    if not self._username:
+      raise TwitterError("The twitter.Api instance must be authenticated.")
+    url = 'http://twitter.com/direct_messages/new.json'
+    data = {'text': text, 'user': user}
+    json = self._FetchUrl(url,
+                          data=data,
+                          no_cache=True)
+    data = simplejson.loads(json)
+    return DirectMessage.NewFromJsonDict(data)
 
   def SetCredentials(self, username, password):
     '''Set the username and password for this instance
@@ -910,7 +967,7 @@ class Api(object):
     # Add any additional query parameters to the query string
     if extra_params and len(extra_params) > 0:
       # Filter out the parameters that have a value of None (but '' is okay)
-      p = dict([ (k, v) for k, v in extra_params.items() if v is not None])
+      p = dict([(k, unicode(v).encode('utf-8')) for k, v in extra_params.items() if v is not None])
       # Convert the parameters into key=value&key=value form
       extra_query = urllib.urlencode(p)
       # Add it to the existing query
@@ -935,14 +992,14 @@ class Api(object):
 
   def _FetchUrl(self,
                 url,
-                post_data=None,
+                data=None,
                 parameters=None,
                 no_cache=None):
     """Fetch a URL, optionally caching for a specified time.
 
     Args:
       url: The URL to retrieve
-      post_data: A string to be sent in the body of the request. [OPTIONAL]
+      data: A dict of (str, utf-8 unicode) key value pairs.  If set, POST will be used.
       parameters: A dict of key/value pairs that should added to
                   the query string. [OPTIONAL]
       username: A HTTP Basic Auth username for this request
@@ -957,6 +1014,11 @@ class Api(object):
 
     # Get a url opener that can handle basic auth
     opener = self._GetOpener(url, username=self._username, password=self._password)
+
+    if data:
+      post_data = urllib.urlencode(dict([(k, unicode(v).encode('utf-8')) for k, v in data.items()]))
+    else:
+      post_data = None
 
     # Open and return the URL immediately if we're not going to cache
     if no_cache or not self._cache or not self._cache_timeout:
@@ -980,7 +1042,6 @@ class Api(object):
 
     # Always return the latest version
     return url_data
-
 
 class _FileCacheError(Exception):
   '''Base exception class for FileCache related errors'''
