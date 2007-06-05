@@ -100,8 +100,8 @@ def main():
   password = passwordflag or GetPasswordEnv() or rc.GetPassword()
   if not username or not password:
     PrintUsageAndExit()
-  api = twitter.Api()
-  status = api.PostUpdate(username, password, message)
+  api = twitter.Api(username=username, password=password)
+  status = api.PostUpdate(message)
   print "%s just posted: %s" % (status.user.name, status.text)
 
 if __name__ == "__main__":
