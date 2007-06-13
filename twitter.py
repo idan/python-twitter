@@ -448,7 +448,6 @@ class User(object):
   profile_image_url= property(GetProfileImageUrl, SetProfileImageUrl,
                               doc='The url of the thumbnail of this user.')
 
-
   def GetStatus(self):
     '''Get the latest twitter.Status of this user.
 
@@ -1002,6 +1001,28 @@ class Api(object):
       raise TwitterError("id must be an integer")
     url = 'http://twitter.com/statuses/show/%s.json' % id
     json = self._FetchUrl(url)
+    data = simplejson.loads(json)
+    return Status.NewFromJsonDict(data)
+
+  def DestroyStatus(self, id):
+    '''Destroys the status specified by the required ID parameter.
+
+    The twitter.Api instance must be authenticated and thee
+    authenticating user must be the author of the specified status.
+
+    Args:
+      id: The numerical ID of the status you're trying to destroy.
+
+    Returns:
+      A twitter.Status instance representing the destroyed status message
+    '''
+    try:
+      if id:
+        int(id)
+    except:
+      raise TwitterError("id must be an integer")
+    url = 'http://twitter.com/statuses/destroy/%s.json' % id
+    json = self._FetchUrl(url, post_data={})
     data = simplejson.loads(json)
     return Status.NewFromJsonDict(data)
 

@@ -340,6 +340,13 @@ class ApiTest(unittest.TestCase):
     self.assertEqual(89512102, status.id)
     self.assertEqual(718443, status.user.id)
 
+  def testDestroyStatus(self):
+    '''Test the twitter.Api DestroyStatus method'''
+    self._AddHandler('http://twitter.com/statuses/destroy/103208352.json',
+                     curry(self._OpenTestData, 'status-destroy.json'))
+    status = self._api.DestroyStatus(103208352)
+    self.assertEqual(103208352, status.id)
+
   def testPostUpdate(self):
     '''Test the twitter.Api PostUpdate method'''
     self._AddHandler('http://twitter.com/statuses/update.json',
