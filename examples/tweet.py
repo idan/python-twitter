@@ -79,12 +79,13 @@ class TweetRc(object):
 def main():
   try:
     shortflags = 'h'
-    longflags = ['help', 'username=', 'password=']
+    longflags = ['help', 'username=', 'password=', 'encoding=']
     opts, args = getopt.gnu_getopt(sys.argv[1:], shortflags, longflags)
   except getopt.GetoptError:
     PrintUsageAndExit()
   usernameflag = None
   passwordflag = None
+  encoding = None
   for o, a in opts:
     if o in ("-h", "--help"):
       PrintUsageAndExit()
@@ -92,6 +93,8 @@ def main():
       usernameflag = a
     if o in ("--password"):
       passwordflag = a
+    if o in ("--encoding"):
+      encoding = a
   message = ' '.join(args)
   if not message:
     PrintUsageAndExit()
@@ -100,8 +103,13 @@ def main():
   password = passwordflag or GetPasswordEnv() or rc.GetPassword()
   if not username or not password:
     PrintUsageAndExit()
-  api = twitter.Api(username=username, password=password)
-  status = api.PostUpdate(message)
+  api = twitter.Api(username=username, password=password, input_encoding=encoding)
+  try:
+    status = api.PostUpdate(message)
+  except UnicodeDecodeError:
+    print "Your message could not be encoded.  Perhaps it contains non-ASCII characters? "
+    print "Try explicitly specifying the encoding with the  it with the --encoding flag"
+    sys.exit(2)
   print "%s just posted: %s" % (status.user.name, status.text)
 
 if __name__ == "__main__":

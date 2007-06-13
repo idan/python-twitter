@@ -11,6 +11,7 @@ __version__ = '0.4'
 import md5
 import os
 import simplejson
+import sys
 import tempfile
 import time
 import urllib
@@ -882,20 +883,20 @@ class Api(object):
 
   _API_REALM = 'Twitter API'
 
-  def __init__(self, username=None, password=None, encoding='utf-8'):
+  def __init__(self, username=None, password=None, input_encoding=None):
     '''Instantiate a new twitter.Api object.
 
     Args:
       username: The username of the twitter account.  [optional]
       password: The password for the twitter account. [optional]
-      encoding: The string encoding being used. [optional, default 'utf-8']
+      input_encoding: The encoding used to encode strings in the input. [optional]
     '''
     self._cache = _FileCache()
     self._urllib = urllib2
     self._cache_timeout = Api.DEFAULT_CACHE_TIMEOUT
     self._user_agent = 'Python-urllib/%s (python-twitter/%s)' % \
                        (self._urllib.__version__, twitter.__version__)
-    self._encoding = encoding
+    self._input_encoding = input_encoding
     self.SetCredentials(username, password)
 
   def GetPublicTimeline(self, since_id=None):
@@ -1305,6 +1306,12 @@ class Api(object):
     opener.addheaders = [('User-agent', self._user_agent)]
     return opener
 
+  def _Encode(self, s):
+    if self._input_encoding:
+      return unicode(s, self._input_encoding).encode('utf-8')
+    else:
+      return unicode(s).encode('utf-8')
+
   def _EncodeParameters(self, parameters):
     '''Return a string in key=value&key=value form
 
@@ -1320,7 +1327,7 @@ class Api(object):
     if parameters is None:
       return None
     else:
-      return urllib.urlencode(dict([(k, unicode(v).encode(self._encoding)) for k, v in parameters.items() if v is not None]))
+      return urllib.urlencode(dict([(k, self._Encode(v)) for k, v in parameters.items() if v is not None]))
 
   def _EncodePostData(self, post_data):
     '''Return a string in key=value&key=value form
@@ -1338,7 +1345,7 @@ class Api(object):
     if post_data is None:
       return None
     else:
-      return urllib.urlencode(dict([(k, unicode(v).encode(self._encoding)) for k, v in post_data.items()]))
+      return urllib.urlencode(dict([(k, self._Encode(v)) for k, v in post_data.items()]))
 
   def _FetchUrl(self,
                 url,
@@ -1349,7 +1356,7 @@ class Api(object):
 
     Args:
       url: The URL to retrieve
-      data: A dict of (str, utf-8 unicode) key value pairs.  If set, POST will be used.
+      data: A dict of (str, unicode) key value pairs.  If set, POST will be used.
       parameters: A dict of key/value pairs that should added to
                   the query string. [OPTIONAL]
       username: A HTTP Basic Auth username for this request
