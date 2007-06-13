@@ -103,6 +103,7 @@ Example&nbsp;usage:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;api.<a href="#Api-GetReplies">GetReplies</a>()<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;api.<a href="#Api-GetUserTimeline">GetUserTimeline</a>(user)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;api.<a href="#Api-GetStatus">GetStatus</a>(id)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;api.<a href="#Api-DestroyStatus">DestroyStatus</a>(id)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;api.<a href="#Api-GetFriendsTimeline">GetFriendsTimeline</a>(user)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;api.<a href="#Api-GetFriends">GetFriends</a>(user)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;api.<a href="#Api-GetFollowers">GetFollowers</a>()<br>
@@ -145,6 +146,17 @@ Args:<br>
 &nbsp;&nbsp;The&nbsp;ID&nbsp;or&nbsp;screen&nbsp;name&nbsp;of&nbsp;the&nbsp;user&nbsp;&nbsp;with&nbsp;whom&nbsp;to&nbsp;discontinue&nbsp;friendship.<br>
 Returns:<br>
 &nbsp;&nbsp;A&nbsp;twitter.<a href="#User">User</a>&nbsp;instance&nbsp;representing&nbsp;the&nbsp;discontinued&nbsp;friend.</tt></dd></dl>
+
+<dl><dt><a name="Api-DestroyStatus"><strong>DestroyStatus</strong></a>(self, id)</dt><dd><tt>Destroys&nbsp;the&nbsp;status&nbsp;specified&nbsp;by&nbsp;the&nbsp;required&nbsp;ID&nbsp;parameter.<br>
+&nbsp;<br>
+The&nbsp;twitter.<a href="#Api">Api</a>&nbsp;instance&nbsp;must&nbsp;be&nbsp;authenticated&nbsp;and&nbsp;thee<br>
+authenticating&nbsp;user&nbsp;must&nbsp;be&nbsp;the&nbsp;author&nbsp;of&nbsp;the&nbsp;specified&nbsp;status.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;id:&nbsp;The&nbsp;numerical&nbsp;ID&nbsp;of&nbsp;the&nbsp;status&nbsp;you're&nbsp;trying&nbsp;to&nbsp;destroy.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;twitter.<a href="#Status">Status</a>&nbsp;instance&nbsp;representing&nbsp;the&nbsp;destroyed&nbsp;status&nbsp;message</tt></dd></dl>
 
 <dl><dt><a name="Api-GetDirectMessages"><strong>GetDirectMessages</strong></a>(self, since<font color="#909090">=None</font>)</dt><dd><tt>Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;the&nbsp;direct&nbsp;messages&nbsp;sent&nbsp;to&nbsp;the&nbsp;authenticating&nbsp;user.<br>
 &nbsp;<br>

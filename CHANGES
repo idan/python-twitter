@@ -1,6 +1,7 @@
 2007-06-13
 
   Released 0.4.
+  Added DestroyStatus
   Added DestroyDirectMessage
   Added CreateFriendship
   Added DestoryFriendship

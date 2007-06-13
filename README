@@ -116,7 +116,7 @@ To post a twitter status message (requires authentication):
   I love python-twitter!
 }}}
 
-There are more API methods, to read the full API documentation:
+There are many more API methods, to read the full API documentation:
 
 {{{
   $ pydoc twitter.Api
