@@ -866,6 +866,7 @@ class Api(object):
       >>> api.GetReplies()
       >>> api.GetUserTimeline(user)
       >>> api.GetStatus(id)
+      >>> api.DestroyStatus(id)
       >>> api.GetFriendsTimeline(user)
       >>> api.GetFriends(user)
       >>> api.GetFollowers()
