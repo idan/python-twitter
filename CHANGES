@@ -1,6 +1,7 @@
 2007-06-13
 
   Released 0.4.
+  Fixed a unicode error that prevented tweet.py from working.
   Added DestroyStatus
   Added DestroyDirectMessage
   Added CreateFriendship
