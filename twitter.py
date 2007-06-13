@@ -1005,9 +1005,7 @@ class Api(object):
       raise TwitterError("Text must be less than or equal to 140 characters.")
     url = 'http://twitter.com/statuses/update.json'
     data = {'status': text}
-    json = self._FetchUrl(url,
-                          post_data=data,
-                          no_cache=True)
+    json = self._FetchUrl(url, post_data=data)
     data = simplejson.loads(json)
     return Status.NewFromJsonDict(data)
 
@@ -1133,9 +1131,7 @@ class Api(object):
       raise TwitterError("The twitter.Api instance must be authenticated.")
     url = 'http://twitter.com/direct_messages/new.json'
     data = {'text': text, 'user': user}
-    json = self._FetchUrl(url,
-                          post_data=data,
-                          no_cache=True)
+    json = self._FetchUrl(url, post_data=data)
     data = simplejson.loads(json)
     return DirectMessage.NewFromJsonDict(data)
 
@@ -1153,11 +1149,39 @@ class Api(object):
       A twitter.DirectMessage instance representing the message destroyed
     '''
     url = 'http://twitter.com/direct_messages/destroy/%s.json' % id
-    json = self._FetchUrl(url,
-                          post_data={},
-                          no_cache=True)
+    json = self._FetchUrl(url, post_data={})
     data = simplejson.loads(json)
     return DirectMessage.NewFromJsonDict(data)
+
+  def CreateFriendship(self, user):
+    '''Befriends the user specified in the user parameter as the authenticating user.
+
+    The twitter.Api instance must be authenticated.
+
+    Args:
+      The ID or screen name of the user to befriend.
+    Returns:
+      A twitter.User instance representing the befriended user.
+    '''
+    url = 'http://twitter.com/friendships/create/%s.json' % user
+    json = self._FetchUrl(url, post_data={})
+    data = simplejson.loads(json)
+    return User.NewFromJsonDict(data)
+
+  def DestroyFriendship(self, user):
+    '''Discontinues friendship with the user specified in the user parameter.
+
+    The twitter.Api instance must be authenticated.
+
+    Args:
+      The ID or screen name of the user  with whom to discontinue friendship.
+    Returns:
+      A twitter.User instance representing the discontinued friend.
+    '''
+    url = 'http://twitter.com/friendships/destroy/%s.json' % user
+    json = self._FetchUrl(url, post_data={})
+    data = simplejson.loads(json)
+    return User.NewFromJsonDict(data)
 
   def SetCredentials(self, username, password):
     '''Set the username and password for this instance

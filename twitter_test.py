@@ -404,6 +404,22 @@ class ApiTest(unittest.TestCase):
     # This is rather arbitrary, but spot checking is better than nothing
     self.assertEqual(673483, status.sender_id)
 
+  def testCreateFriendship(self):
+    '''Test the twitter.Api CreateFriendship method'''
+    self._AddHandler('http://twitter.com/friendships/create/dewitt.json',
+                     curry(self._OpenTestData, 'friendship-create.json'))
+    user = self._api.CreateFriendship('dewitt')
+    # This is rather arbitrary, but spot checking is better than nothing
+    self.assertEqual(673483, user.id)
+
+  def testDestroyFriendship(self):
+    '''Test the twitter.Api DestroyFriendship method'''
+    self._AddHandler('http://twitter.com/friendships/destroy/dewitt.json',
+                     curry(self._OpenTestData, 'friendship-destroy.json'))
+    user = self._api.DestroyFriendship('dewitt')
+    # This is rather arbitrary, but spot checking is better than nothing
+    self.assertEqual(673483, user.id)
+
   def testGetUser(self):
     '''Test the twitter.Api GetUser method'''
     self._AddHandler('http://twitter.com/users/show/dewitt.json',
