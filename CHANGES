@@ -1,9 +1,12 @@
 2007-06-13
+
+  Released 0.4.
   Added DestroyDirectMessage
   Added CreateFriendship
   Added DestoryFriendship
 
 2007-06-03
+
   Fixed the bug that prevented unicode strings being posted
   Username and password now set on twitter.Api, not individual method calls
   Added SetCredentials and ClearCredentials
