@@ -859,6 +859,23 @@ class Api(object):
       >>> status = api.PostUpdate('I love python-twitter!')
       >>> print status.text
       I love python-twitter!
+
+    There are many other methods, including:
+
+      >>> api.PostDirectMessage(user, text)
+      >>> api.GetUser(user)
+      >>> api.GetReplies()
+      >>> api.GetUserTimeline(user)
+      >>> api.GetStatus(id)
+      >>> api.GetFriendsTimeline(user)
+      >>> api.GetFriends(user)
+      >>> api.GetFollowers()
+      >>> api.GetFeatured()
+      >>> api.GetDirectMessages()
+      >>> api.PostDirectMessage(user, text)
+      >>> api.DestroyDirectMessage(id)
+      >>> api.DestroyFriendship(user)
+      >>> api.CreateFriendship(user)
   '''
 
   DEFAULT_CACHE_TIMEOUT = 60 # cache for 1 minute
