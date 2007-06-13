@@ -848,7 +848,7 @@ class Api(object):
     username and password:
 
       >>> api = twitter.Api(username='twitter user', password='twitter pass')
- 
+
     To fetch your friends (after being authenticated):
 
       >>> users = api.GetFriends()
@@ -865,28 +865,30 @@ class Api(object):
 
   _API_REALM = 'Twitter API'
 
-  def __init__(self, username=None, password=None):
+  def __init__(self, username=None, password=None, encoding='utf-8'):
     '''Instantiate a new twitter.Api object.
 
     Args:
       username: The username of the twitter account.  [optional]
       password: The password for the twitter account. [optional]
+      encoding: The string encoding being used. [optional, default 'utf-8']
     '''
     self._cache = _FileCache()
     self._urllib = urllib2
     self._cache_timeout = Api.DEFAULT_CACHE_TIMEOUT
     self._user_agent = 'Python-urllib/%s (python-twitter/%s)' % \
                        (self._urllib.__version__, twitter.__version__)
+    self._encoding = encoding
     self.SetCredentials(username, password)
 
   def GetPublicTimeline(self, since_id=None):
     '''Fetch the sequnce of public twitter.Status message for all users.
 
     Args:
-      since_id: 
+      since_id:
         Returns only public statuses with an ID greater than (that is,
         more recent than) the specified ID. [Optional]
- 
+
     Returns:
       An sequence of twitter.Status instances, one for each message
     '''
@@ -904,9 +906,9 @@ class Api(object):
     The twitter.Api instance must be authenticated if the user is private.
 
     Args:
-      user: 
+      user:
         Specifies the ID or screen name of the user for whom to return
-        the friends_timeline.  If unspecified, the username and password 
+        the friends_timeline.  If unspecified, the username and password
         must be set in the twitter.Api instance.  [optional]
       since:
         Narrows the returned results to just those statuses created
@@ -919,7 +921,7 @@ class Api(object):
       url = 'http://twitter.com/statuses/friends_timeline/%s.json' % user
     elif not user and not self._username:
       raise TwitterError("User must be specified if API is not authenticated.")
-    else:      
+    else:
       url = 'http://twitter.com/statuses/friends_timeline.json'
     parameters = {}
     if since:
@@ -935,7 +937,7 @@ class Api(object):
 
     Args:
       user:
-        either the username (short_name) or id of the user to retrieve.  If 
+        either the username (short_name) or id of the user to retrieve.  If
         not specified, then the current authenticated user is used. [optional]
       count: the number of status messages to retrieve [optional]
       since:
@@ -964,14 +966,14 @@ class Api(object):
     json = self._FetchUrl(url, parameters=parameters)
     data = simplejson.loads(json)
     return [Status.NewFromJsonDict(x) for x in data]
-  
+
   def GetStatus(self, id):
     '''Returns a single status message.
 
     The twitter.Api instance must be authenticated if the status message is private.
 
     Args:
-      id: The numerical ID of the status you're trying to retrieve. 
+      id: The numerical ID of the status you're trying to retrieve.
 
     Returns:
       A twitter.Status instance representing that status message
@@ -1004,7 +1006,7 @@ class Api(object):
     url = 'http://twitter.com/statuses/update.json'
     data = {'status': text}
     json = self._FetchUrl(url,
-                          data=data,
+                          post_data=data,
                           no_cache=True)
     data = simplejson.loads(json)
     return Status.NewFromJsonDict(data)
@@ -1016,7 +1018,7 @@ class Api(object):
 
     Returns:
       A sequence of twitter.Status instances, one for each reply to the user.
-    '''    
+    '''
     url = 'http://twitter.com/statuses/replies.json'
     if not self._username:
       raise TwitterError("The twitter.Api instance must be authenticated.")
@@ -1040,7 +1042,7 @@ class Api(object):
       raise TwitterError("twitter.Api instance must be authenticated")
     if user:
       url = 'http://twitter.com/statuses/friends/%s.json' % user
-    else:      
+    else:
       url = 'http://twitter.com/statuses/friends.json'
     json = self._FetchUrl(url)
     data = simplejson.loads(json)
@@ -1095,13 +1097,13 @@ class Api(object):
 
     The twitter.Api instance must be authenticated.
 
-    Args:  
+    Args:
       since:
         Narrows the returned results to just those statuses created
         after the specified HTTP-formatted date. [optional]
 
     Returns:
-      A sequence of twitter.Status instances
+      A sequence of twitter.DirectMessage instances
     '''
     url = 'http://twitter.com/direct_messages.json'
     if not self._username:
@@ -1112,7 +1114,7 @@ class Api(object):
     json = self._FetchUrl(url, parameters=parameters)
     data = simplejson.loads(json)
     return [DirectMessage.NewFromJsonDict(x) for x in data]
- 
+
   def PostDirectMessage(self, user, text):
     '''Post a twitter direct message from the authenticated user
 
@@ -1123,7 +1125,7 @@ class Api(object):
       text: The message text to be posted.  Must be less than 140 characters.
 
     Returns:
-      A twitter.Status instance representing the message posted
+      A twitter.DirectMessage instance representing the message posted
     '''
     if len(text) > 140:
       raise TwitterError("Text must be less than or equal to 140 characters.")
@@ -1132,7 +1134,27 @@ class Api(object):
     url = 'http://twitter.com/direct_messages/new.json'
     data = {'text': text, 'user': user}
     json = self._FetchUrl(url,
-                          data=data,
+                          post_data=data,
+                          no_cache=True)
+    data = simplejson.loads(json)
+    return DirectMessage.NewFromJsonDict(data)
+
+  def DestroyDirectMessage(self, id):
+    '''Destroys the direct message specified in the required ID parameter.
+
+    The twitter.Api instance must be authenticated, and the
+    authenticating user must be the recipient of the specified direct
+    message.
+
+    Args:
+      id: The id of the direct message to be destroyed
+
+    Returns:
+      A twitter.DirectMessage instance representing the message destroyed
+    '''
+    url = 'http://twitter.com/direct_messages/destroy/%s.json' % id
+    json = self._FetchUrl(url,
+                          post_data={},
                           no_cache=True)
     data = simplejson.loads(json)
     return DirectMessage.NewFromJsonDict(data)
@@ -1199,10 +1221,7 @@ class Api(object):
 
     # Add any additional query parameters to the query string
     if extra_params and len(extra_params) > 0:
-      # Filter out the parameters that have a value of None (but '' is okay)
-      p = dict([(k, unicode(v).encode('utf-8')) for k, v in extra_params.items() if v is not None])
-      # Convert the parameters into key=value&key=value form
-      extra_query = urllib.urlencode(p)
+      extra_query = self._EncodeParameters(extra_params)
       # Add it to the existing query
       if query:
         query += '&' + extra_query
@@ -1223,9 +1242,44 @@ class Api(object):
     opener.addheaders = [('User-agent', self._user_agent)]
     return opener
 
+  def _EncodeParameters(self, parameters):
+    '''Return a string in key=value&key=value form
+
+    Values of None are not included in the output string.
+
+    Args:
+      parameters:
+        A dict of (key, value) tuples, where value is encoded as
+        specified by self._encoding
+    Returns:
+      A URL-encoded string in "key=value&key=value" form
+    '''
+    if parameters is None:
+      return None
+    else:
+      return urllib.urlencode(dict([(k, unicode(v).encode(self._encoding)) for k, v in parameters.items() if v is not None]))
+
+  def _EncodePostData(self, post_data):
+    '''Return a string in key=value&key=value form
+
+    Values are assumed to be encoded in the format specified by self._encoding,
+    and are subsequently URL encoded.
+
+    Args:
+      post_data:
+        A dict of (key, value) tuples, where value is encoded as
+        specified by self._encoding
+    Returns:
+      A URL-encoded string in "key=value&key=value" form
+    '''
+    if post_data is None:
+      return None
+    else:
+      return urllib.urlencode(dict([(k, unicode(v).encode(self._encoding)) for k, v in post_data.items()]))
+
   def _FetchUrl(self,
                 url,
-                data=None,
+                post_data=None,
                 parameters=None,
                 no_cache=None):
     """Fetch a URL, optionally caching for a specified time.
@@ -1248,14 +1302,11 @@ class Api(object):
     # Get a url opener that can handle basic auth
     opener = self._GetOpener(url, username=self._username, password=self._password)
 
-    if data:
-      post_data = urllib.urlencode(dict([(k, unicode(v).encode('utf-8')) for k, v in data.items()]))
-    else:
-      post_data = None
+    encoded_post_data = self._EncodePostData(post_data)
 
     # Open and return the URL immediately if we're not going to cache
-    if no_cache or not self._cache or not self._cache_timeout:
-      url_data = opener.open(url, post_data).read()
+    if encoded_post_data or no_cache or not self._cache or not self._cache_timeout:
+      url_data = opener.open(url, encoded_post_data).read()
     else:
       # Unique keys are a combination of the url and the username
       if self._username:
@@ -1268,7 +1319,7 @@ class Api(object):
 
       # If the cached version is outdated then fetch another and store it
       if not last_cached or time.time() >= last_cached + self._cache_timeout:
-        url_data = opener.open(url, post_data).read()
+        url_data = opener.open(url, encoded_post_data).read()
         self._cache.Set(key, url_data)
       else:
         url_data = self._cache.Get(key)

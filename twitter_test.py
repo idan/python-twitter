@@ -339,7 +339,7 @@ class ApiTest(unittest.TestCase):
     status = self._api.GetStatus(89512102)
     self.assertEqual(89512102, status.id)
     self.assertEqual(718443, status.user.id)
-    
+
   def testPostUpdate(self):
     '''Test the twitter.Api PostUpdate method'''
     self._AddHandler('http://twitter.com/statuses/update.json',
@@ -395,7 +395,15 @@ class ApiTest(unittest.TestCase):
     status = self._api.PostDirectMessage('test', u'Моё судно на воздушной подушке полно угрей')
     # This is rather arbitrary, but spot checking is better than nothing
     self.assertEqual(u'Моё судно на воздушной подушке полно угрей', status.text)
-   
+
+  def testDestroyDirectMessage(self):
+    '''Test the twitter.Api DestroyDirectMessage method'''
+    self._AddHandler('http://twitter.com/direct_messages/destroy/3496342.json',
+                     curry(self._OpenTestData, 'direct_message-destroy.json'))
+    status = self._api.DestroyDirectMessage(3496342)
+    # This is rather arbitrary, but spot checking is better than nothing
+    self.assertEqual(673483, status.sender_id)
+
   def testGetUser(self):
     '''Test the twitter.Api GetUser method'''
     self._AddHandler('http://twitter.com/users/show/dewitt.json',
