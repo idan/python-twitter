@@ -59,14 +59,17 @@ the twitter data model.
 
 *Model:*
 
-The two model classes are twitter.Status and twitter.User.  The
-API methods return instances of these classes.  
+The three model classes are twitter.Status, twitter.User, and
+twitter.DirectMessage.  The API methods return instances of these
+classes.
 
-To read the full API for twitter.Status or twitter.User, run:
+To read the full API for twitter.Status, twitter.User, or
+twitter.DirectMessage, run:
 
 {{{
   $ pydoc twitter.Status
   $ pydoc twitter.User
+  $ pydoc twitter.DirectMessage
 }}}
 
 *API:*
@@ -137,9 +140,6 @@ Statement coverage of twitter_test is only about 80% of twitter.py.
 
 The twitter.Status and twitter.User classes could perform more validation
 on the property setters.
-
-The ez_setup.py script should be upgraded to the latest version.  Waiting
-until more distributions have packages for it.
 
 ==License==
 
