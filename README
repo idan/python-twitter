@@ -50,7 +50,7 @@ Check out the latest development version anonymously with:
 
 View the last release API documentation at:
 
-  http://static.unto.net/python-twitter/0.4/doc/twitter.html
+  http://static.unto.net/python-twitter/0.5/doc/twitter.html
 
 ==Using==
 
@@ -140,6 +140,15 @@ Statement coverage of twitter_test is only about 80% of twitter.py.
 
 The twitter.Status and twitter.User classes could perform more validation
 on the property setters.
+
+==More Information==
+
+Please visit http://groups.google.com/group/python-twitter for more discussion.
+
+==Contributors==
+
+Additional thanks to Pierre-Jean Coudert and the rest of the
+python-twitter mailing list.
 
 ==License==
 

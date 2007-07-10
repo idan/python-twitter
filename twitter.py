@@ -5,7 +5,7 @@
 '''A library that provides a python interface to the Twitter API'''
 
 __author__ = 'dewitt@google.com'
-__version__ = '0.4'
+__version__ = '0.5'
 
 
 import md5
@@ -883,19 +883,24 @@ class Api(object):
 
   _API_REALM = 'Twitter API'
 
-  def __init__(self, username=None, password=None, input_encoding=None):
+  def __init__(self,
+               username=None,
+               password=None,
+               input_encoding=None,
+               request_headers=None):
     '''Instantiate a new twitter.Api object.
 
     Args:
       username: The username of the twitter account.  [optional]
       password: The password for the twitter account. [optional]
-      input_encoding: The encoding used to encode strings in the input. [optional]
+      input_encoding: The encoding used to encode input strings. [optional]
+      request_header: A dictionary of additional HTTP request headers. [optional]
     '''
     self._cache = _FileCache()
     self._urllib = urllib2
     self._cache_timeout = Api.DEFAULT_CACHE_TIMEOUT
-    self._user_agent = 'Python-urllib/%s (python-twitter/%s)' % \
-                       (self._urllib.__version__, twitter.__version__)
+    self._InitializeRequestHeaders(request_headers)
+    self._InitializeUserAgent()
     self._input_encoding = input_encoding
     self.SetCredentials(username, password)
 
@@ -1269,7 +1274,25 @@ class Api(object):
     Args:
       user_agent: a string that should be send to the server as the User-agent
     '''
-    self._user_agent = user_agent
+    self._request_headers['User-Agent'] = user_agent
+
+  def SetXTwitterHeaders(self, client, url, version):
+    '''Set the X-Twitter HTTP headers that will be sent to the server.
+
+    Args:
+      client:
+         The client name as a string.  Will be sent to the server as
+         the 'X-Twitter-Client' header.
+      url:
+         The URL of the meta.xml as a string.  Will be sent to the server
+         as the 'X-Twitter-Client-URL' header.
+      version:
+         The client version as a string.  Will be sent to the server
+         as the 'X-Twitter-Client-Version' header.
+    '''
+    self._request_headers['X-Twitter-Client'] = client
+    self._request_headers['X-Twitter-Client-URL'] = url
+    self._request_headers['X-Twitter-Client-Version'] = version
 
   def _BuildUrl(self, url, path_elements=None, extra_params=None):
     # Break url into consituent parts
@@ -1295,6 +1318,17 @@ class Api(object):
     # Return the rebuilt URL
     return urlparse.urlunparse((scheme, netloc, path, params, query, fragment))
 
+  def _InitializeRequestHeaders(self, request_headers):
+    if request_headers:
+      self._request_headers = request_headers
+    else:
+      self._request_headers = {}
+
+  def _InitializeUserAgent(self):
+    user_agent = 'Python-urllib/%s (python-twitter/%s)' % \
+                 (self._urllib.__version__, twitter.__version__)
+    self.SetUserAgent(user_agent)
+
   def _GetOpener(self, url, username=None, password=None):
     if username and password:
       handler = self._urllib.HTTPBasicAuthHandler()
@@ -1303,7 +1337,7 @@ class Api(object):
       opener = self._urllib.build_opener(handler)
     else:
       opener = self._urllib.build_opener()
-    opener.addheaders = [('User-agent', self._user_agent)]
+    opener.addheaders = self._request_headers.items()
     return opener
 
   def _Encode(self, s):
