@@ -1480,17 +1480,16 @@ class _FileCache(object):
       return None
 
   def _GetUsername(self):
-    '''Try and retrieve the current username in a cross-platform environment.'''
-    if os.name == 'posix':
-      return os.getenv('USER') or os.getenv('LOGNAME') or 'nobody'
-    elif os.name == 'nt' or sys.platform == 'win32':
-      import win32api
-      return win32api.GetUserName() or 'nobody'
-    else:
-      return 'nobody'
+    '''Attempt to find the username in a cross-platform fashion.'''
+    return os.getenv('USER') or \
+        os.getenv('LOGNAME') or \
+        os.getenv('USERNAME') or \
+        os.getlogin() or \
+        'nobody'
 
   def _GetTmpCachePath(self):
     username = self._GetUsername()
+    print "\n" + username 
     cache_directory = 'python.cache_' + username
     return os.path.join(tempfile.gettempdir(), cache_directory)
 
