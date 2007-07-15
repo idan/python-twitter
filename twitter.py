@@ -1434,8 +1434,6 @@ class _FileCacheError(Exception):
 
 class _FileCache(object):
 
-  DEFAULT_ROOT_DIRECTORY = os.path.join(tempfile.gettempdir(), 'python.cache')
-
   DEPTH = 3
 
   def __init__(self,root_directory=None):
@@ -1481,9 +1479,24 @@ class _FileCache(object):
     else:
       return None
 
+  def _GetUsername(self):
+    '''Try and retrieve the current username in a cross-platform environment.'''
+    if os.name == 'posix':
+      return os.getenv('USER') or os.getenv('LOGNAME') or 'nobody'
+    elif os.name == 'nt' or sys.platform == 'win32':
+      import win32api
+      return win32api.GetUserName() or 'nobody'
+    else:
+      return 'nobody'
+
+  def _GetTmpCachePath(self):
+    username = self._GetUsername()
+    cache_directory = 'python.cache_' + username
+    return os.path.join(tempfile.gettempdir(), cache_directory)
+
   def _InitializeRootDirectory(self, root_directory):
     if not root_directory:
-      root_directory = _FileCache.DEFAULT_ROOT_DIRECTORY
+      root_directory = self._GetTmpCachePath()
     root_directory = os.path.abspath(root_directory)
     if not os.path.exists(root_directory):
       os.mkdir(root_directory)

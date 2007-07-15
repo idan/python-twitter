@@ -3,6 +3,7 @@
   Added support for X-Twitter-* HTTP headers
   Fixed the tests to work across all timezones
   Removed the 140 character limit from PostUpdate  
+  Added support for per-user tmp cache directories
 
 2007-06-13
 
