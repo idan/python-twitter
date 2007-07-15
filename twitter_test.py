@@ -48,10 +48,11 @@ class StatusTest(unittest.TestCase):
     status = twitter.Status()
     status.SetId(4391023)
     self.assertEqual(4391023, status.GetId())
+    created_at = time.mktime((2007, 1, 26, 23, 17, 14, -1, -1, -1))
     status.SetCreatedAt('Fri Jan 26 23:17:14 +0000 2007')
     self.assertEqual('Fri Jan 26 23:17:14 +0000 2007', status.GetCreatedAt())
-    self.assertEqual(1169882234, status.GetCreatedAtInSeconds())
-    status.SetNow(1169882244)
+    self.assertEqual(created_at, status.GetCreatedAtInSeconds())
+    status.SetNow(created_at + 10)
     self.assertEqual("about 10 seconds ago", status.GetRelativeCreatedAt())
     status.SetText(u'A légpárnás hajóm tele van angolnákkal.')
     self.assertEqual(u'A légpárnás hajóm tele van angolnákkal.',
@@ -64,10 +65,11 @@ class StatusTest(unittest.TestCase):
     status = twitter.Status()
     status.id = 1
     self.assertEqual(1, status.id)
+    created_at = time.mktime((2007, 1, 26, 23, 17, 14, -1, -1, -1))
     status.created_at = 'Fri Jan 26 23:17:14 +0000 2007'
     self.assertEqual('Fri Jan 26 23:17:14 +0000 2007', status.created_at)
-    self.assertEqual(1169882234, status.created_at_in_seconds)
-    status.now = 1169882244
+    self.assertEqual(created_at, status.created_at_in_seconds)
+    status.now = created_at + 10
     self.assertEqual('about 10 seconds ago', status.relative_created_at)
     status.user = self._GetSampleUser()
     self.assertEqual(718443, status.user.id)
