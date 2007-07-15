@@ -1489,7 +1489,6 @@ class _FileCache(object):
 
   def _GetTmpCachePath(self):
     username = self._GetUsername()
-    print "\n" + username 
     cache_directory = 'python.cache_' + username
     return os.path.join(tempfile.gettempdir(), cache_directory)
 
