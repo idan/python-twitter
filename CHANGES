@@ -2,7 +2,7 @@
 
   Added support for X-Twitter-* HTTP headers
   Fixed the tests to work across all timezones
-  
+  Removed the 140 character limit from PostUpdate  
 
 2007-06-13
 

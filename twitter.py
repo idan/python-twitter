@@ -1170,8 +1170,6 @@ class Api(object):
     Returns:
       A twitter.DirectMessage instance representing the message posted
     '''
-    if len(text) > 140:
-      raise TwitterError("Text must be less than or equal to 140 characters.")
     if not self._username:
       raise TwitterError("The twitter.Api instance must be authenticated.")
     url = 'http://twitter.com/direct_messages/new.json'
