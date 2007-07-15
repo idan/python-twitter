@@ -8,6 +8,7 @@ __author__ = 'dewitt@google.com'
 __version__ = '0.5'
 
 
+import base64
 import md5
 import os
 import simplejson
@@ -1327,8 +1328,18 @@ class Api(object):
                  (self._urllib.__version__, twitter.__version__)
     self.SetUserAgent(user_agent)
 
+  def _AddAuthorizationHeader(self, username, password):
+    if username and password:
+      basic_auth = base64.encodestring('%s:%s' % (username, password))[:-1]
+      self._request_headers['Authorization'] = 'Basic %s' % basic_auth
+
+  def _RemoveAuthorizationHeader(self):
+    if self._request_headers and 'Authorization' in self._request_headers:
+      del self._request_headers['Authorization']
+
   def _GetOpener(self, url, username=None, password=None):
     if username and password:
+      self._AddAuthorizationHeader(username, password)
       handler = self._urllib.HTTPBasicAuthHandler()
       (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(url)
       handler.add_password(Api._API_REALM, netloc, username, password)
