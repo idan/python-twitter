@@ -18,20 +18,34 @@ it even easier for python programmers to use.
 
 *From source:*
 
+Install the dependencies:
+
+  http://cheeseshop.python.org/pypi/simplejson
+
 Download the latest python-twitter library from:
 
   http://code.google.com/p/python-twitter/
 
-Install the dependencies:
-
-  http://cheeseshop.python.org/pypi/simplejson
 
 Untar the source distribution and run:
 
 {{{
   $ python setup.py build
-  $ python twitter_test.py
   $ python setup.py install
+}}}
+
+*Testing*
+
+With setuptools installed:
+
+{{{
+  $ python setup.py test
+}}}
+
+Without setuptools installed:
+
+{{{
+  $ python twitter_test.py
 }}}
 
 ==Getting the code==
