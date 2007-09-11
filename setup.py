@@ -24,10 +24,8 @@ metadata = dict(
 
 # Extra package metadata to be used only if setuptools is installed
 setuptools_metadata = dict(
-#  data_files = [('.', ['README'])],
-  install_requires = 'setuptools',
+  install_requires = ['setuptools', 'simplejson'],
   include_package_data = True,
-#  zip_safe=False,
   classifiers = [
     'Development Status :: 4 - Beta',
     'Intended Audience :: Developers',
