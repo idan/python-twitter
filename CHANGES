@@ -1,5 +1,6 @@
-2007-07-10
+2007-09-13
 
+  Released version 0.5.
   Added back support for setuptools (conditionally)
   Added support for X-Twitter-* HTTP headers
   Fixed the tests to work across all timezones
