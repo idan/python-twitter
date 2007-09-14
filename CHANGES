@@ -1,4 +1,8 @@
 2007-09-13
+ 
+  Unset the executable bit on README.
+
+2007-09-13
 
   Released version 0.5.
   Added back support for setuptools (conditionally)
