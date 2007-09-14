@@ -6,7 +6,7 @@
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>twitter</strong></big></big> (version 0.4)</font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>twitter</strong></big></big> (version 0.5)</font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/dewitt/svn/python-twitter/twitter.py">/home/dewitt/svn/python-twitter/twitter.py</a></font></td></tr></table>
     <p><tt>A&nbsp;library&nbsp;that&nbsp;provides&nbsp;a&nbsp;python&nbsp;interface&nbsp;to&nbsp;the&nbsp;Twitter&nbsp;API</tt></p>
@@ -17,16 +17,18 @@
 <font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
     
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="md5.html">md5</a><br>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="base64.html">base64</a><br>
+<a href="md5.html">md5</a><br>
 <a href="os.html">os</a><br>
-<a href="simplejson.html">simplejson</a><br>
-</td><td width="25%" valign=top><a href="tempfile.html">tempfile</a><br>
-<a href="time.html">time</a><br>
+</td><td width="25%" valign=top><a href="simplejson.html">simplejson</a><br>
+<a href="sys.html">sys</a><br>
+<a href="tempfile.html">tempfile</a><br>
+</td><td width="25%" valign=top><a href="time.html">time</a><br>
 <a href="twitter.html">twitter</a><br>
-</td><td width="25%" valign=top><a href="urllib.html">urllib</a><br>
-<a href="urllib2.html">urllib2</a><br>
+<a href="urllib.html">urllib</a><br>
+</td><td width="25%" valign=top><a href="urllib2.html">urllib2</a><br>
 <a href="urlparse.html">urlparse</a><br>
-</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+</td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
 <td colspan=3 valign=bottom>&nbsp;<br>
@@ -311,24 +313,34 @@ Args:<br>
 Args:<br>
 &nbsp;&nbsp;user_agent:&nbsp;a&nbsp;string&nbsp;that&nbsp;should&nbsp;be&nbsp;send&nbsp;to&nbsp;the&nbsp;server&nbsp;as&nbsp;the&nbsp;<a href="#User">User</a>-agent</tt></dd></dl>
 
-<dl><dt><a name="Api-__init__"><strong>__init__</strong></a>(self, username<font color="#909090">=None</font>, password<font color="#909090">=None</font>, encoding<font color="#909090">='utf-8'</font>)</dt><dd><tt>Instantiate&nbsp;a&nbsp;new&nbsp;twitter.<a href="#Api">Api</a>&nbsp;<a href="__builtin__.html#object">object</a>.<br>
+<dl><dt><a name="Api-SetXTwitterHeaders"><strong>SetXTwitterHeaders</strong></a>(self, client, url, version)</dt><dd><tt>Set&nbsp;the&nbsp;X-Twitter&nbsp;HTTP&nbsp;headers&nbsp;that&nbsp;will&nbsp;be&nbsp;sent&nbsp;to&nbsp;the&nbsp;server.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;client:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;client&nbsp;name&nbsp;as&nbsp;a&nbsp;string.&nbsp;&nbsp;Will&nbsp;be&nbsp;sent&nbsp;to&nbsp;the&nbsp;server&nbsp;as<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;'X-Twitter-Client'&nbsp;header.<br>
+&nbsp;&nbsp;url:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;URL&nbsp;of&nbsp;the&nbsp;meta.xml&nbsp;as&nbsp;a&nbsp;string.&nbsp;&nbsp;Will&nbsp;be&nbsp;sent&nbsp;to&nbsp;the&nbsp;server<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;as&nbsp;the&nbsp;'X-Twitter-Client-URL'&nbsp;header.<br>
+&nbsp;&nbsp;version:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;client&nbsp;version&nbsp;as&nbsp;a&nbsp;string.&nbsp;&nbsp;Will&nbsp;be&nbsp;sent&nbsp;to&nbsp;the&nbsp;server<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;as&nbsp;the&nbsp;'X-Twitter-Client-Version'&nbsp;header.</tt></dd></dl>
+
+<dl><dt><a name="Api-__init__"><strong>__init__</strong></a>(self, username<font color="#909090">=None</font>, password<font color="#909090">=None</font>, input_encoding<font color="#909090">=None</font>, request_headers<font color="#909090">=None</font>)</dt><dd><tt>Instantiate&nbsp;a&nbsp;new&nbsp;twitter.<a href="#Api">Api</a>&nbsp;<a href="__builtin__.html#object">object</a>.<br>
 &nbsp;<br>
 Args:<br>
 &nbsp;&nbsp;username:&nbsp;The&nbsp;username&nbsp;of&nbsp;the&nbsp;twitter&nbsp;account.&nbsp;&nbsp;[optional]<br>
 &nbsp;&nbsp;password:&nbsp;The&nbsp;password&nbsp;for&nbsp;the&nbsp;twitter&nbsp;account.&nbsp;[optional]<br>
-&nbsp;&nbsp;encoding:&nbsp;The&nbsp;string&nbsp;encoding&nbsp;being&nbsp;used.&nbsp;[optional,&nbsp;default&nbsp;'utf-8']</tt></dd></dl>
+&nbsp;&nbsp;input_encoding:&nbsp;The&nbsp;encoding&nbsp;used&nbsp;to&nbsp;encode&nbsp;input&nbsp;strings.&nbsp;[optional]<br>
+&nbsp;&nbsp;request_header:&nbsp;A&nbsp;dictionary&nbsp;of&nbsp;additional&nbsp;HTTP&nbsp;request&nbsp;headers.&nbsp;[optional]</tt></dd></dl>
 
-<hr>
-Data descriptors defined here:<br>
-<dl><dt><strong>__dict__</strong></dt>
-<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
-</dl>
-<dl><dt><strong>__weakref__</strong></dt>
-<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
-</dl>
 <hr>
 Data and other attributes defined here:<br>
 <dl><dt><strong>DEFAULT_CACHE_TIMEOUT</strong> = 60</dl>
+
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'Api' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -475,37 +487,112 @@ Returns:<br>
 &nbsp;&nbsp;A&nbsp;twitter.<a href="#DirectMessage">DirectMessage</a>&nbsp;instance</tt></dd></dl>
 
 <hr>
-Data descriptors defined here:<br>
-<dl><dt><strong>__dict__</strong></dt>
-<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
-</dl>
-<dl><dt><strong>__weakref__</strong></dt>
-<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
-</dl>
+Properties defined here:<br>
 <dl><dt><strong>created_at</strong></dt>
 <dd><tt>The&nbsp;time&nbsp;this&nbsp;direct&nbsp;message&nbsp;was&nbsp;posted.</tt></dd>
+<dd><dl><dt><a name="-<em>get</em>"><strong><em>get</em></strong></a> = GetCreatedAt(self)</dt><dd><tt>Get&nbsp;the&nbsp;time&nbsp;this&nbsp;direct&nbsp;message&nbsp;was&nbsp;posted.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;time&nbsp;this&nbsp;direct&nbsp;message&nbsp;was&nbsp;posted</tt></dd></dl>
+</dd>
+<dd><dl><dt><a name="-<em>set</em>"><strong><em>set</em></strong></a> = SetCreatedAt(self, created_at)</dt><dd><tt>Set&nbsp;the&nbsp;time&nbsp;this&nbsp;direct&nbsp;message&nbsp;was&nbsp;posted.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;created_at:&nbsp;The&nbsp;time&nbsp;this&nbsp;direct&nbsp;message&nbsp;was&nbsp;created</tt></dd></dl>
+</dd>
 </dl>
 <dl><dt><strong>created_at_in_seconds</strong></dt>
 <dd><tt>The&nbsp;time&nbsp;this&nbsp;direct&nbsp;message&nbsp;was&nbsp;posted,&nbsp;in&nbsp;seconds&nbsp;since&nbsp;the&nbsp;epoch</tt></dd>
+<dd><dl><dt><a name="-<em>get</em>"><strong><em>get</em></strong></a> = GetCreatedAtInSeconds(self)</dt><dd><tt>Get&nbsp;the&nbsp;time&nbsp;this&nbsp;direct&nbsp;message&nbsp;was&nbsp;posted,&nbsp;in&nbsp;seconds&nbsp;since&nbsp;the&nbsp;epoch.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;time&nbsp;this&nbsp;direct&nbsp;message&nbsp;was&nbsp;posted,&nbsp;in&nbsp;seconds&nbsp;since&nbsp;the&nbsp;epoch.</tt></dd></dl>
+</dd>
 </dl>
 <dl><dt><strong>id</strong></dt>
 <dd><tt>The&nbsp;unique&nbsp;id&nbsp;of&nbsp;this&nbsp;direct&nbsp;message.</tt></dd>
+<dd><dl><dt><a name="-<em>get</em>"><strong><em>get</em></strong></a> = GetId(self)</dt><dd><tt>Get&nbsp;the&nbsp;unique&nbsp;id&nbsp;of&nbsp;this&nbsp;direct&nbsp;message.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;unique&nbsp;id&nbsp;of&nbsp;this&nbsp;direct&nbsp;message</tt></dd></dl>
+</dd>
+<dd><dl><dt><a name="-<em>set</em>"><strong><em>set</em></strong></a> = SetId(self, id)</dt><dd><tt>Set&nbsp;the&nbsp;unique&nbsp;id&nbsp;of&nbsp;this&nbsp;direct&nbsp;message.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;id:&nbsp;The&nbsp;unique&nbsp;id&nbsp;of&nbsp;this&nbsp;direct&nbsp;message</tt></dd></dl>
+</dd>
 </dl>
 <dl><dt><strong>recipient_id</strong></dt>
 <dd><tt>The&nbsp;unique&nbsp;recipient&nbsp;id&nbsp;of&nbsp;this&nbsp;direct&nbsp;message.</tt></dd>
+<dd><dl><dt><a name="-<em>get</em>"><strong><em>get</em></strong></a> = GetRecipientId(self)</dt><dd><tt>Get&nbsp;the&nbsp;unique&nbsp;recipient&nbsp;id&nbsp;of&nbsp;this&nbsp;direct&nbsp;message.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;unique&nbsp;recipient&nbsp;id&nbsp;of&nbsp;this&nbsp;direct&nbsp;message</tt></dd></dl>
+</dd>
+<dd><dl><dt><a name="-<em>set</em>"><strong><em>set</em></strong></a> = SetRecipientId(self, recipient_id)</dt><dd><tt>Set&nbsp;the&nbsp;unique&nbsp;recipient&nbsp;id&nbsp;of&nbsp;this&nbsp;direct&nbsp;message.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;recipient&nbsp;id:&nbsp;The&nbsp;unique&nbsp;recipient&nbsp;id&nbsp;of&nbsp;this&nbsp;direct&nbsp;message</tt></dd></dl>
+</dd>
 </dl>
 <dl><dt><strong>recipient_screen_name</strong></dt>
 <dd><tt>The&nbsp;unique&nbsp;recipient&nbsp;screen&nbsp;name&nbsp;of&nbsp;this&nbsp;direct&nbsp;message.</tt></dd>
+<dd><dl><dt><a name="-<em>get</em>"><strong><em>get</em></strong></a> = GetRecipientScreenName(self)</dt><dd><tt>Get&nbsp;the&nbsp;unique&nbsp;recipient&nbsp;screen&nbsp;name&nbsp;of&nbsp;this&nbsp;direct&nbsp;message.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;unique&nbsp;recipient&nbsp;screen&nbsp;name&nbsp;of&nbsp;this&nbsp;direct&nbsp;message</tt></dd></dl>
+</dd>
+<dd><dl><dt><a name="-<em>set</em>"><strong><em>set</em></strong></a> = SetRecipientScreenName(self, recipient_screen_name)</dt><dd><tt>Set&nbsp;the&nbsp;unique&nbsp;recipient&nbsp;screen&nbsp;name&nbsp;of&nbsp;this&nbsp;direct&nbsp;message.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;recipient_screen_name:&nbsp;The&nbsp;unique&nbsp;recipient&nbsp;screen&nbsp;name&nbsp;of&nbsp;this&nbsp;direct&nbsp;message</tt></dd></dl>
+</dd>
 </dl>
 <dl><dt><strong>sender_id</strong></dt>
 <dd><tt>The&nbsp;unique&nbsp;sender&nbsp;id&nbsp;of&nbsp;this&nbsp;direct&nbsp;message.</tt></dd>
+<dd><dl><dt><a name="-<em>get</em>"><strong><em>get</em></strong></a> = GetSenderId(self)</dt><dd><tt>Get&nbsp;the&nbsp;unique&nbsp;sender&nbsp;id&nbsp;of&nbsp;this&nbsp;direct&nbsp;message.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;unique&nbsp;sender&nbsp;id&nbsp;of&nbsp;this&nbsp;direct&nbsp;message</tt></dd></dl>
+</dd>
+<dd><dl><dt><a name="-<em>set</em>"><strong><em>set</em></strong></a> = SetSenderId(self, sender_id)</dt><dd><tt>Set&nbsp;the&nbsp;unique&nbsp;sender&nbsp;id&nbsp;of&nbsp;this&nbsp;direct&nbsp;message.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;sender&nbsp;id:&nbsp;The&nbsp;unique&nbsp;sender&nbsp;id&nbsp;of&nbsp;this&nbsp;direct&nbsp;message</tt></dd></dl>
+</dd>
 </dl>
 <dl><dt><strong>sender_screen_name</strong></dt>
 <dd><tt>The&nbsp;unique&nbsp;sender&nbsp;screen&nbsp;name&nbsp;of&nbsp;this&nbsp;direct&nbsp;message.</tt></dd>
+<dd><dl><dt><a name="-<em>get</em>"><strong><em>get</em></strong></a> = GetSenderScreenName(self)</dt><dd><tt>Get&nbsp;the&nbsp;unique&nbsp;sender&nbsp;screen&nbsp;name&nbsp;of&nbsp;this&nbsp;direct&nbsp;message.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;unique&nbsp;sender&nbsp;screen&nbsp;name&nbsp;of&nbsp;this&nbsp;direct&nbsp;message</tt></dd></dl>
+</dd>
+<dd><dl><dt><a name="-<em>set</em>"><strong><em>set</em></strong></a> = SetSenderScreenName(self, sender_screen_name)</dt><dd><tt>Set&nbsp;the&nbsp;unique&nbsp;sender&nbsp;screen&nbsp;name&nbsp;of&nbsp;this&nbsp;direct&nbsp;message.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;sender_screen_name:&nbsp;The&nbsp;unique&nbsp;sender&nbsp;screen&nbsp;name&nbsp;of&nbsp;this&nbsp;direct&nbsp;message</tt></dd></dl>
+</dd>
 </dl>
 <dl><dt><strong>text</strong></dt>
 <dd><tt>The&nbsp;text&nbsp;of&nbsp;this&nbsp;direct&nbsp;message</tt></dd>
+<dd><dl><dt><a name="-<em>get</em>"><strong><em>get</em></strong></a> = GetText(self)</dt><dd><tt>Get&nbsp;the&nbsp;text&nbsp;of&nbsp;this&nbsp;direct&nbsp;message.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;text&nbsp;of&nbsp;this&nbsp;direct&nbsp;message.</tt></dd></dl>
+</dd>
+<dd><dl><dt><a name="-<em>set</em>"><strong><em>set</em></strong></a> = SetText(self, text)</dt><dd><tt>Set&nbsp;the&nbsp;text&nbsp;of&nbsp;this&nbsp;direct&nbsp;message.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;text:&nbsp;The&nbsp;text&nbsp;of&nbsp;this&nbsp;direct&nbsp;message</tt></dd></dl>
+</dd>
 </dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'DirectMessage' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
@@ -644,34 +731,101 @@ Returns:<br>
 &nbsp;&nbsp;A&nbsp;twitter.<a href="#Status">Status</a>&nbsp;instance</tt></dd></dl>
 
 <hr>
-Data descriptors defined here:<br>
-<dl><dt><strong>__dict__</strong></dt>
-<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
-</dl>
-<dl><dt><strong>__weakref__</strong></dt>
-<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
-</dl>
+Properties defined here:<br>
 <dl><dt><strong>created_at</strong></dt>
 <dd><tt>The&nbsp;time&nbsp;this&nbsp;status&nbsp;message&nbsp;was&nbsp;posted.</tt></dd>
+<dd><dl><dt><a name="-<em>get</em>"><strong><em>get</em></strong></a> = GetCreatedAt(self)</dt><dd><tt>Get&nbsp;the&nbsp;time&nbsp;this&nbsp;status&nbsp;message&nbsp;was&nbsp;posted.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;time&nbsp;this&nbsp;status&nbsp;message&nbsp;was&nbsp;posted</tt></dd></dl>
+</dd>
+<dd><dl><dt><a name="-<em>set</em>"><strong><em>set</em></strong></a> = SetCreatedAt(self, created_at)</dt><dd><tt>Set&nbsp;the&nbsp;time&nbsp;this&nbsp;status&nbsp;message&nbsp;was&nbsp;posted.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;created_at:&nbsp;The&nbsp;time&nbsp;this&nbsp;status&nbsp;message&nbsp;was&nbsp;created</tt></dd></dl>
+</dd>
 </dl>
 <dl><dt><strong>created_at_in_seconds</strong></dt>
 <dd><tt>The&nbsp;time&nbsp;this&nbsp;status&nbsp;message&nbsp;was&nbsp;posted,&nbsp;in&nbsp;seconds&nbsp;since&nbsp;the&nbsp;epoch</tt></dd>
+<dd><dl><dt><a name="-<em>get</em>"><strong><em>get</em></strong></a> = GetCreatedAtInSeconds(self)</dt><dd><tt>Get&nbsp;the&nbsp;time&nbsp;this&nbsp;status&nbsp;message&nbsp;was&nbsp;posted,&nbsp;in&nbsp;seconds&nbsp;since&nbsp;the&nbsp;epoch.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;time&nbsp;this&nbsp;status&nbsp;message&nbsp;was&nbsp;posted,&nbsp;in&nbsp;seconds&nbsp;since&nbsp;the&nbsp;epoch.</tt></dd></dl>
+</dd>
 </dl>
 <dl><dt><strong>id</strong></dt>
 <dd><tt>The&nbsp;unique&nbsp;id&nbsp;of&nbsp;this&nbsp;status&nbsp;message.</tt></dd>
+<dd><dl><dt><a name="-<em>get</em>"><strong><em>get</em></strong></a> = GetId(self)</dt><dd><tt>Get&nbsp;the&nbsp;unique&nbsp;id&nbsp;of&nbsp;this&nbsp;status&nbsp;message.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;unique&nbsp;id&nbsp;of&nbsp;this&nbsp;status&nbsp;message</tt></dd></dl>
+</dd>
+<dd><dl><dt><a name="-<em>set</em>"><strong><em>set</em></strong></a> = SetId(self, id)</dt><dd><tt>Set&nbsp;the&nbsp;unique&nbsp;id&nbsp;of&nbsp;this&nbsp;status&nbsp;message.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;id:&nbsp;The&nbsp;unique&nbsp;id&nbsp;of&nbsp;this&nbsp;status&nbsp;message</tt></dd></dl>
+</dd>
 </dl>
 <dl><dt><strong>now</strong></dt>
 <dd><tt>The&nbsp;wallclock&nbsp;time&nbsp;for&nbsp;this&nbsp;status&nbsp;instance.</tt></dd>
+<dd><dl><dt><a name="-<em>get</em>"><strong><em>get</em></strong></a> = GetNow(self)</dt><dd><tt>Get&nbsp;the&nbsp;wallclock&nbsp;time&nbsp;for&nbsp;this&nbsp;status&nbsp;message.<br>
+&nbsp;<br>
+Used&nbsp;to&nbsp;calculate&nbsp;relative_created_at.&nbsp;&nbsp;Defaults&nbsp;to&nbsp;the&nbsp;time<br>
+the&nbsp;object&nbsp;was&nbsp;instantiated.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;Whatever&nbsp;the&nbsp;status&nbsp;instance&nbsp;believes&nbsp;the&nbsp;current&nbsp;time&nbsp;to&nbsp;be,<br>
+&nbsp;&nbsp;in&nbsp;seconds&nbsp;since&nbsp;the&nbsp;epoch.</tt></dd></dl>
+</dd>
+<dd><dl><dt><a name="-<em>set</em>"><strong><em>set</em></strong></a> = SetNow(self, now)</dt><dd><tt>Set&nbsp;the&nbsp;wallclock&nbsp;time&nbsp;for&nbsp;this&nbsp;status&nbsp;message.<br>
+&nbsp;<br>
+Used&nbsp;to&nbsp;calculate&nbsp;relative_created_at.&nbsp;&nbsp;Defaults&nbsp;to&nbsp;the&nbsp;time<br>
+the&nbsp;object&nbsp;was&nbsp;instantiated.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;now:&nbsp;The&nbsp;wallclock&nbsp;time&nbsp;for&nbsp;this&nbsp;instance.</tt></dd></dl>
+</dd>
 </dl>
 <dl><dt><strong>relative_created_at</strong></dt>
 <dd><tt>Get&nbsp;a&nbsp;human&nbsp;readable&nbsp;string&nbsp;representingthe&nbsp;posting&nbsp;time</tt></dd>
+<dd><dl><dt><a name="-<em>get</em>"><strong><em>get</em></strong></a> = GetRelativeCreatedAt(self)</dt><dd><tt>Get&nbsp;a&nbsp;human&nbsp;redable&nbsp;string&nbsp;representing&nbsp;the&nbsp;posting&nbsp;time<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;human&nbsp;readable&nbsp;string&nbsp;representing&nbsp;the&nbsp;posting&nbsp;time</tt></dd></dl>
+</dd>
 </dl>
 <dl><dt><strong>text</strong></dt>
 <dd><tt>The&nbsp;text&nbsp;of&nbsp;this&nbsp;status&nbsp;message</tt></dd>
+<dd><dl><dt><a name="-<em>get</em>"><strong><em>get</em></strong></a> = GetText(self)</dt><dd><tt>Get&nbsp;the&nbsp;text&nbsp;of&nbsp;this&nbsp;status&nbsp;message.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;text&nbsp;of&nbsp;this&nbsp;status&nbsp;message.</tt></dd></dl>
+</dd>
+<dd><dl><dt><a name="-<em>set</em>"><strong><em>set</em></strong></a> = SetText(self, text)</dt><dd><tt>Set&nbsp;the&nbsp;text&nbsp;of&nbsp;this&nbsp;status&nbsp;message.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;text:&nbsp;The&nbsp;text&nbsp;of&nbsp;this&nbsp;status&nbsp;message</tt></dd></dl>
+</dd>
 </dl>
 <dl><dt><strong>user</strong></dt>
 <dd><tt>A&nbsp;twitter.User&nbsp;reprenting&nbsp;the&nbsp;entity&nbsp;posting&nbsp;this&nbsp;status&nbsp;message</tt></dd>
+<dd><dl><dt><a name="-<em>get</em>"><strong><em>get</em></strong></a> = GetUser(self)</dt><dd><tt>Get&nbsp;a&nbsp;twitter.User&nbsp;reprenting&nbsp;the&nbsp;entity&nbsp;posting&nbsp;this&nbsp;status&nbsp;message.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;twitter.User&nbsp;reprenting&nbsp;the&nbsp;entity&nbsp;posting&nbsp;this&nbsp;status&nbsp;message</tt></dd></dl>
+</dd>
+<dd><dl><dt><a name="-<em>set</em>"><strong><em>set</em></strong></a> = SetUser(self, user)</dt><dd><tt>Set&nbsp;a&nbsp;twitter.User&nbsp;reprenting&nbsp;the&nbsp;entity&nbsp;posting&nbsp;this&nbsp;status&nbsp;message.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;user:&nbsp;A&nbsp;twitter.User&nbsp;reprenting&nbsp;the&nbsp;entity&nbsp;posting&nbsp;this&nbsp;status&nbsp;message</tt></dd></dl>
+</dd>
 </dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'Status' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
@@ -824,37 +978,117 @@ Returns:<br>
 &nbsp;&nbsp;A&nbsp;twitter.<a href="#User">User</a>&nbsp;instance</tt></dd></dl>
 
 <hr>
-Data descriptors defined here:<br>
-<dl><dt><strong>__dict__</strong></dt>
-<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
-</dl>
-<dl><dt><strong>__weakref__</strong></dt>
-<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
-</dl>
+Properties defined here:<br>
 <dl><dt><strong>description</strong></dt>
 <dd><tt>The&nbsp;short&nbsp;text&nbsp;description&nbsp;of&nbsp;this&nbsp;user.</tt></dd>
+<dd><dl><dt><a name="-<em>get</em>"><strong><em>get</em></strong></a> = GetDescription(self)</dt><dd><tt>Get&nbsp;the&nbsp;short&nbsp;text&nbsp;description&nbsp;of&nbsp;this&nbsp;user.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;short&nbsp;text&nbsp;description&nbsp;of&nbsp;this&nbsp;user</tt></dd></dl>
+</dd>
+<dd><dl><dt><a name="-<em>set</em>"><strong><em>set</em></strong></a> = SetDescription(self, description)</dt><dd><tt>Set&nbsp;the&nbsp;short&nbsp;text&nbsp;description&nbsp;of&nbsp;this&nbsp;user.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;description:&nbsp;The&nbsp;short&nbsp;text&nbsp;description&nbsp;of&nbsp;this&nbsp;user</tt></dd></dl>
+</dd>
 </dl>
 <dl><dt><strong>id</strong></dt>
 <dd><tt>The&nbsp;unique&nbsp;id&nbsp;of&nbsp;this&nbsp;user.</tt></dd>
+<dd><dl><dt><a name="-<em>get</em>"><strong><em>get</em></strong></a> = GetId(self)</dt><dd><tt>Get&nbsp;the&nbsp;unique&nbsp;id&nbsp;of&nbsp;this&nbsp;user.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;unique&nbsp;id&nbsp;of&nbsp;this&nbsp;user</tt></dd></dl>
+</dd>
+<dd><dl><dt><a name="-<em>set</em>"><strong><em>set</em></strong></a> = SetId(self, id)</dt><dd><tt>Set&nbsp;the&nbsp;unique&nbsp;id&nbsp;of&nbsp;this&nbsp;user.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;id:&nbsp;The&nbsp;unique&nbsp;id&nbsp;of&nbsp;this&nbsp;user.</tt></dd></dl>
+</dd>
 </dl>
 <dl><dt><strong>location</strong></dt>
 <dd><tt>The&nbsp;geographic&nbsp;location&nbsp;of&nbsp;this&nbsp;user.</tt></dd>
+<dd><dl><dt><a name="-<em>get</em>"><strong><em>get</em></strong></a> = GetLocation(self)</dt><dd><tt>Get&nbsp;the&nbsp;geographic&nbsp;location&nbsp;of&nbsp;this&nbsp;user.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;geographic&nbsp;location&nbsp;of&nbsp;this&nbsp;user</tt></dd></dl>
+</dd>
+<dd><dl><dt><a name="-<em>set</em>"><strong><em>set</em></strong></a> = SetLocation(self, location)</dt><dd><tt>Set&nbsp;the&nbsp;geographic&nbsp;location&nbsp;of&nbsp;this&nbsp;user.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;location:&nbsp;The&nbsp;geographic&nbsp;location&nbsp;of&nbsp;this&nbsp;user</tt></dd></dl>
+</dd>
 </dl>
 <dl><dt><strong>name</strong></dt>
 <dd><tt>The&nbsp;real&nbsp;name&nbsp;of&nbsp;this&nbsp;user.</tt></dd>
+<dd><dl><dt><a name="-<em>get</em>"><strong><em>get</em></strong></a> = GetName(self)</dt><dd><tt>Get&nbsp;the&nbsp;real&nbsp;name&nbsp;of&nbsp;this&nbsp;user.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;real&nbsp;name&nbsp;of&nbsp;this&nbsp;user</tt></dd></dl>
+</dd>
+<dd><dl><dt><a name="-<em>set</em>"><strong><em>set</em></strong></a> = SetName(self, name)</dt><dd><tt>Set&nbsp;the&nbsp;real&nbsp;name&nbsp;of&nbsp;this&nbsp;user.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;name:&nbsp;The&nbsp;real&nbsp;name&nbsp;of&nbsp;this&nbsp;user</tt></dd></dl>
+</dd>
 </dl>
 <dl><dt><strong>profile_image_url</strong></dt>
 <dd><tt>The&nbsp;url&nbsp;of&nbsp;the&nbsp;thumbnail&nbsp;of&nbsp;this&nbsp;user.</tt></dd>
+<dd><dl><dt><a name="-<em>get</em>"><strong><em>get</em></strong></a> = GetProfileImageUrl(self)</dt><dd><tt>Get&nbsp;the&nbsp;url&nbsp;of&nbsp;the&nbsp;thumbnail&nbsp;of&nbsp;this&nbsp;user.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;url&nbsp;of&nbsp;the&nbsp;thumbnail&nbsp;of&nbsp;this&nbsp;user</tt></dd></dl>
+</dd>
+<dd><dl><dt><a name="-<em>set</em>"><strong><em>set</em></strong></a> = SetProfileImageUrl(self, profile_image_url)</dt><dd><tt>Set&nbsp;the&nbsp;url&nbsp;of&nbsp;the&nbsp;thumbnail&nbsp;of&nbsp;this&nbsp;user.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;profile_image_url:&nbsp;The&nbsp;url&nbsp;of&nbsp;the&nbsp;thumbnail&nbsp;of&nbsp;this&nbsp;user</tt></dd></dl>
+</dd>
 </dl>
 <dl><dt><strong>screen_name</strong></dt>
 <dd><tt>The&nbsp;short&nbsp;username&nbsp;of&nbsp;this&nbsp;user.</tt></dd>
+<dd><dl><dt><a name="-<em>get</em>"><strong><em>get</em></strong></a> = GetScreenName(self)</dt><dd><tt>Get&nbsp;the&nbsp;short&nbsp;username&nbsp;of&nbsp;this&nbsp;user.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;short&nbsp;username&nbsp;of&nbsp;this&nbsp;user</tt></dd></dl>
+</dd>
+<dd><dl><dt><a name="-<em>set</em>"><strong><em>set</em></strong></a> = SetScreenName(self, screen_name)</dt><dd><tt>Set&nbsp;the&nbsp;short&nbsp;username&nbsp;of&nbsp;this&nbsp;user.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;screen_name:&nbsp;the&nbsp;short&nbsp;username&nbsp;of&nbsp;this&nbsp;user</tt></dd></dl>
+</dd>
 </dl>
 <dl><dt><strong>status</strong></dt>
 <dd><tt>The&nbsp;latest&nbsp;twitter.Status&nbsp;of&nbsp;this&nbsp;user.</tt></dd>
+<dd><dl><dt><a name="-<em>get</em>"><strong><em>get</em></strong></a> = GetStatus(self)</dt><dd><tt>Get&nbsp;the&nbsp;latest&nbsp;twitter.Status&nbsp;of&nbsp;this&nbsp;user.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;latest&nbsp;twitter.Status&nbsp;of&nbsp;this&nbsp;user</tt></dd></dl>
+</dd>
+<dd><dl><dt><a name="-<em>set</em>"><strong><em>set</em></strong></a> = SetStatus(self, status)</dt><dd><tt>Set&nbsp;the&nbsp;latest&nbsp;twitter.Status&nbsp;of&nbsp;this&nbsp;user.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;status:&nbsp;The&nbsp;latest&nbsp;twitter.Status&nbsp;of&nbsp;this&nbsp;user</tt></dd></dl>
+</dd>
 </dl>
 <dl><dt><strong>url</strong></dt>
 <dd><tt>The&nbsp;homepage&nbsp;url&nbsp;of&nbsp;this&nbsp;user.</tt></dd>
+<dd><dl><dt><a name="-<em>get</em>"><strong><em>get</em></strong></a> = GetUrl(self)</dt><dd><tt>Get&nbsp;the&nbsp;homepage&nbsp;url&nbsp;of&nbsp;this&nbsp;user.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;homepage&nbsp;url&nbsp;of&nbsp;this&nbsp;user</tt></dd></dl>
+</dd>
+<dd><dl><dt><a name="-<em>set</em>"><strong><em>set</em></strong></a> = SetUrl(self, url)</dt><dd><tt>Set&nbsp;the&nbsp;homepage&nbsp;url&nbsp;of&nbsp;this&nbsp;user.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;url:&nbsp;The&nbsp;homepage&nbsp;url&nbsp;of&nbsp;this&nbsp;user</tt></dd></dl>
+</dd>
 </dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'User' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">
@@ -863,7 +1097,7 @@ Data descriptors defined here:<br>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><strong>__author__</strong> = 'dewitt@google.com'<br>
-<strong>__version__</strong> = '0.4'</td></tr></table><p>
+<strong>__version__</strong> = '0.5'</td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#7799ee">
 <td colspan=3 valign=bottom>&nbsp;<br>
