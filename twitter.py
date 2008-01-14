@@ -1395,7 +1395,7 @@ class Api(object):
                 post_data=None,
                 parameters=None,
                 no_cache=None):
-    """Fetch a URL, optionally caching for a specified time.
+    '''Fetch a URL, optionally caching for a specified time.
 
     Args:
       url: The URL to retrieve
@@ -1408,7 +1408,7 @@ class Api(object):
 
     Returns:
       A string containing the body of the response.
-    """
+    '''
     # Add key/value parameters to the query string of the url
     url = self._BuildUrl(url, extra_params=parameters)
 
