@@ -15,6 +15,7 @@ import simplejson
 import sys
 import tempfile
 import time
+import calendar
 import urllib
 import urllib2
 import urlparse
@@ -92,7 +93,7 @@ class Status(object):
     Returns:
       The time this status message was posted, in seconds since the epoch.
     '''
-    return time.mktime(time.strptime(self.created_at, '%a %b %d %H:%M:%S +0000 %Y'))
+    return calendar.timegm(time.strptime(self.created_at, '%a %b %d %H:%M:%S +0000 %Y'))
 
   created_at_in_seconds = property(GetCreatedAtInSeconds,
                                    doc="The time this status message was "
@@ -197,7 +198,7 @@ class Status(object):
       in seconds since the epoch.
     '''
     if self._now is None:
-      self._now = time.mktime(time.gmtime())
+      self._now = time.time()
     return self._now
 
   def SetNow(self, now):
@@ -644,7 +645,7 @@ class DirectMessage(object):
     Returns:
       The time this direct message was posted, in seconds since the epoch.
     '''
-    return time.mktime(time.strptime(self.created_at, '%a %b %d %H:%M:%S +0000 %Y'))
+    return calendar.timegm(time.strptime(self.created_at, '%a %b %d %H:%M:%S +0000 %Y'))
 
   created_at_in_seconds = property(GetCreatedAtInSeconds,
                                    doc="The time this direct message was "

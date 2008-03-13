@@ -11,6 +11,7 @@ __author__ = 'dewitt@google.com'
 import os
 import simplejson
 import time
+import calendar
 import unittest
 
 import twitter
@@ -48,7 +49,7 @@ class StatusTest(unittest.TestCase):
     status = twitter.Status()
     status.SetId(4391023)
     self.assertEqual(4391023, status.GetId())
-    created_at = time.mktime((2007, 1, 26, 23, 17, 14, -1, -1, -1))
+    created_at = calendar.timegm((2007, 1, 26, 23, 17, 14, -1, -1, -1))
     status.SetCreatedAt('Fri Jan 26 23:17:14 +0000 2007')
     self.assertEqual('Fri Jan 26 23:17:14 +0000 2007', status.GetCreatedAt())
     self.assertEqual(created_at, status.GetCreatedAtInSeconds())
@@ -65,7 +66,7 @@ class StatusTest(unittest.TestCase):
     status = twitter.Status()
     status.id = 1
     self.assertEqual(1, status.id)
-    created_at = time.mktime((2007, 1, 26, 23, 17, 14, -1, -1, -1))
+    created_at = calendar.timegm((2007, 1, 26, 23, 17, 14, -1, -1, -1))
     status.created_at = 'Fri Jan 26 23:17:14 +0000 2007'
     self.assertEqual('Fri Jan 26 23:17:14 +0000 2007', status.created_at)
     self.assertEqual(created_at, status.created_at_in_seconds)
@@ -75,7 +76,7 @@ class StatusTest(unittest.TestCase):
     self.assertEqual(718443, status.user.id)
 
   def _ParseDate(self, string):
-    return time.mktime(time.strptime(string, '%b %d %H:%M:%S %Y'))
+    return calendar.timegm(time.strptime(string, '%b %d %H:%M:%S %Y'))
 
   def testRelativeCreatedAt(self):
     '''Test various permutations of Status relative_created_at'''
