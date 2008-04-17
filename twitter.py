@@ -903,6 +903,7 @@ class Api(object):
     self._cache_timeout = Api.DEFAULT_CACHE_TIMEOUT
     self._InitializeRequestHeaders(request_headers)
     self._InitializeUserAgent()
+    self._InitializeDefaultParameters()
     self._input_encoding = input_encoding
     self.SetCredentials(username, password)
 
@@ -1294,6 +1295,20 @@ class Api(object):
     self._request_headers['X-Twitter-Client-URL'] = url
     self._request_headers['X-Twitter-Client-Version'] = version
 
+  def SetSource(self, source):
+    '''Suggest the "from source" value to be displayed on the Twitter web site.
+
+    The value of the 'source' parameter must be first recognized by
+    the Twitter server.  New source values are authorized on a case by
+    case basis by the Twitter development team.
+
+    Args:
+      source:
+        The source name as a string.  Will be sent to the server as
+        the 'source' parameter.
+    '''
+    self._default_params['source'] = source
+
   def _BuildUrl(self, url, path_elements=None, extra_params=None):
     # Break url into consituent parts
     (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(url)
@@ -1328,6 +1343,9 @@ class Api(object):
     user_agent = 'Python-urllib/%s (python-twitter/%s)' % \
                  (self._urllib.__version__, twitter.__version__)
     self.SetUserAgent(user_agent)
+
+  def _InitializeDefaultParameters(self):
+    self._default_params = {}
 
   def _AddAuthorizationHeader(self, username, password):
     if username and password:
@@ -1410,8 +1428,15 @@ class Api(object):
     Returns:
       A string containing the body of the response.
     '''
+    # Build the extra parameters dict
+    extra_params = {}
+    if self._default_params:
+      extra_params.update(self._default_params)
+    if parameters:
+      extra_params.update(parameters)
+
     # Add key/value parameters to the query string of the url
-    url = self._BuildUrl(url, extra_params=parameters)
+    url = self._BuildUrl(url, extra_params=extra_params)
 
     # Get a url opener that can handle basic auth
     opener = self._GetOpener(url, username=self._username, password=self._password)
