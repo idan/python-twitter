@@ -1518,11 +1518,14 @@ class _FileCache(object):
 
   def _GetUsername(self):
     '''Attempt to find the username in a cross-platform fashion.'''
-    return os.getenv('USER') or \
-        os.getenv('LOGNAME') or \
-        os.getenv('USERNAME') or \
-        os.getlogin() or \
-        'nobody'
+    try:
+      return os.getenv('USER') or \
+             os.getenv('LOGNAME') or \
+             os.getenv('USERNAME') or \
+             os.getlogin() or \
+             'nobody'
+    except IOError:
+      return 'nobody'
 
   def _GetTmpCachePath(self):
     username = self._GetUsername()
