@@ -8,7 +8,7 @@
 <td valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>twitter</strong></big></big> (version 0.5)</font></td
 ><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/dewitt/svn/python-twitter/twitter.py">/home/dewitt/svn/python-twitter/twitter.py</a></font></td></tr></table>
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/Users/dewitt/svn/python-twitter/twitter.py">/Users/dewitt/svn/python-twitter/twitter.py</a></font></td></tr></table>
     <p><tt>A&nbsp;library&nbsp;that&nbsp;provides&nbsp;a&nbsp;python&nbsp;interface&nbsp;to&nbsp;the&nbsp;Twitter&nbsp;API</tt></p>
 <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -18,15 +18,16 @@
     
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="base64.html">base64</a><br>
+<a href="calendar.html">calendar</a><br>
 <a href="md5.html">md5</a><br>
-<a href="os.html">os</a><br>
-</td><td width="25%" valign=top><a href="simplejson.html">simplejson</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+<a href="simplejson.html">simplejson</a><br>
 <a href="sys.html">sys</a><br>
-<a href="tempfile.html">tempfile</a><br>
-</td><td width="25%" valign=top><a href="time.html">time</a><br>
+</td><td width="25%" valign=top><a href="tempfile.html">tempfile</a><br>
+<a href="time.html">time</a><br>
 <a href="twitter.html">twitter</a><br>
-<a href="urllib.html">urllib</a><br>
-</td><td width="25%" valign=top><a href="urllib2.html">urllib2</a><br>
+</td><td width="25%" valign=top><a href="urllib.html">urllib</a><br>
+<a href="urllib2.html">urllib2</a><br>
 <a href="urlparse.html">urlparse</a><br>
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -303,6 +304,17 @@ Args:<br>
 &nbsp;&nbsp;username:&nbsp;The&nbsp;twitter&nbsp;username.<br>
 &nbsp;&nbsp;password:&nbsp;The&nbsp;twitter&nbsp;password.</tt></dd></dl>
 
+<dl><dt><a name="Api-SetSource"><strong>SetSource</strong></a>(self, source)</dt><dd><tt>Suggest&nbsp;the&nbsp;"from&nbsp;source"&nbsp;value&nbsp;to&nbsp;be&nbsp;displayed&nbsp;on&nbsp;the&nbsp;Twitter&nbsp;web&nbsp;site.<br>
+&nbsp;<br>
+The&nbsp;value&nbsp;of&nbsp;the&nbsp;'source'&nbsp;parameter&nbsp;must&nbsp;be&nbsp;first&nbsp;recognized&nbsp;by<br>
+the&nbsp;Twitter&nbsp;server.&nbsp;&nbsp;New&nbsp;source&nbsp;values&nbsp;are&nbsp;authorized&nbsp;on&nbsp;a&nbsp;case&nbsp;by<br>
+case&nbsp;basis&nbsp;by&nbsp;the&nbsp;Twitter&nbsp;development&nbsp;team.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;source:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;source&nbsp;name&nbsp;as&nbsp;a&nbsp;string.&nbsp;&nbsp;Will&nbsp;be&nbsp;sent&nbsp;to&nbsp;the&nbsp;server&nbsp;as<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;'source'&nbsp;parameter.</tt></dd></dl>
+
 <dl><dt><a name="Api-SetUrllib"><strong>SetUrllib</strong></a>(self, urllib)</dt><dd><tt>Override&nbsp;the&nbsp;default&nbsp;urllib&nbsp;implementation.<br>
 &nbsp;<br>
 Args:<br>
@@ -338,7 +350,7 @@ Args:<br>
 Data and other attributes defined here:<br>
 <dl><dt><strong>DEFAULT_CACHE_TIMEOUT</strong> = 60</dl>
 
-<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object at 0x4cf5f0&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
 
 <dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'Api' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
@@ -589,7 +601,7 @@ Args:<br>
 </dl>
 <hr>
 Data and other attributes defined here:<br>
-<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object at 0x4cf3b0&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
 
 <dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'DirectMessage' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
@@ -822,7 +834,7 @@ Args:<br>
 </dl>
 <hr>
 Data and other attributes defined here:<br>
-<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object at 0x4cf390&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
 
 <dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'Status' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
@@ -1085,7 +1097,7 @@ Args:<br>
 </dl>
 <hr>
 Data and other attributes defined here:<br>
-<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object at 0x4cfe30&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
 
 <dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'User' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
