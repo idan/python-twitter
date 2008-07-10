@@ -1,5 +1,6 @@
 2008-07-10
 
+  Added get/create/destroy favorite flags for status messages.
   Bug fix for non-tty devices.
 
 2007-09-13

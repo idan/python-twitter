@@ -32,6 +32,7 @@ class Status(object):
 
     status.created_at
     status.created_at_in_seconds # read only
+    status.favorited
     status.id
     status.text
     status.relative_created_at # read only
@@ -39,6 +40,7 @@ class Status(object):
   '''
   def __init__(self,
                created_at=None,
+               favorited=None,
                id=None,
                text=None,
                user=None,
@@ -52,6 +54,7 @@ class Status(object):
 
     Args:
       created_at: The time this status message was posted
+      favorited: Whether this is a favorite of the authenticated user
       id: The unique id of this status message
       text: The text of this status message
       relative_created_at:
@@ -63,6 +66,7 @@ class Status(object):
         wall clock time.
     '''
     self.created_at = created_at
+    self.favorited = favorited
     self.id = id
     self.text = text
     self.user = user
@@ -98,6 +102,25 @@ class Status(object):
   created_at_in_seconds = property(GetCreatedAtInSeconds,
                                    doc="The time this status message was "
                                        "posted, in seconds since the epoch")
+
+  def GetFavorited(self):
+    '''Get the favorited setting of this status message.
+
+    Returns:
+      True if this status message is favorited; False otherwise
+    '''
+    return self._favorited
+
+  def SetFavorited(self, favorited):
+    '''Set the favorited state of this status message.
+
+    Args:
+      favorited: boolean True/False favorited state of this status message
+    '''
+    self._favorited = favorited
+
+  favorited = property(GetFavorited, SetFavorited,
+                       doc='The favorited state of this status message.')
 
   def GetId(self):
     '''Get the unique id of this status message.
@@ -258,6 +281,8 @@ class Status(object):
     data = {}
     if self.created_at:
       data['created_at'] = self.created_at
+    if self.favorited:
+      data['favorited'] = self.favorited
     if self.id:
       data['id'] = self.id
     if self.text:
@@ -280,6 +305,7 @@ class Status(object):
     else:
       user = None
     return Status(created_at=data.get('created_at', None),
+                  favorited=data.get('favorited', None),
                   id=data.get('id', None),
                   text=data.get('text', None),
                   user=user)
@@ -1228,6 +1254,38 @@ class Api(object):
     json = self._FetchUrl(url, post_data={})
     data = simplejson.loads(json)
     return User.NewFromJsonDict(data)
+
+  def CreateFavorite(self, status):
+    '''Favorites the status specified in the status parameter as the authenticating user.
+    Returns the favorite status when successful.
+
+    The twitter.Api instance must be authenticated.
+
+    Args:
+      The twitter.Status instance to mark as a favorite.
+    Returns:
+      A twitter.Status instance representing the newly-marked favorite.
+    '''
+    url = 'http://twitter.com/favorites/create/%s.json' % status.id
+    json = self._FetchUrl(url, post_data={})
+    data = simplejson.loads(json)
+    return Status.NewFromJsonDict(data)
+
+  def DestroyFavorite(self, status):
+    '''Un-favorites the status specified in the ID parameter as the authenticating user.
+    Returns the un-favorited status in the requested format when successful.
+
+    The twitter.Api instance must be authenticated.
+
+    Args:
+      The twitter.Status to unmark as a favorite.
+    Returns:
+      A twitter.Status instance representing the newly-unmarked favorite.
+    '''
+    url = 'http://twitter.com/favorites/destroy/%s.json' % status.id
+    json = self._FetchUrl(url, post_data={})
+    data = simplejson.loads(json)
+    return Status.NewFromJsonDict(data)
 
   def SetCredentials(self, username, password):
     '''Set the username and password for this instance
