@@ -952,7 +952,7 @@ class Api(object):
     data = simplejson.loads(json)
     return [Status.NewFromJsonDict(x) for x in data]
 
-  def GetFriendsTimeline(self, user=None, since=None):
+  def GetFriendsTimeline(self, user=None, since=None, since_id=None):
     '''Fetch the sequence of twitter.Status messages for a user's friends
 
     The twitter.Api instance must be authenticated if the user is private.
@@ -965,6 +965,9 @@ class Api(object):
       since:
         Narrows the returned results to just those statuses created
         after the specified HTTP-formatted date. [optional]
+      since_id:
+        Returns only statuses with an ID greater than (that is,
+        more recent than) the specified ID. [optional]
 
     Returns:
       A sequence of twitter.Status instances, one for each message
@@ -978,11 +981,13 @@ class Api(object):
     parameters = {}
     if since:
       parameters['since'] = since
+    if since_id:
+      parameters['since_id'] = since_id
     json = self._FetchUrl(url, parameters=parameters)
     data = simplejson.loads(json)
     return [Status.NewFromJsonDict(x) for x in data]
 
-  def GetUserTimeline(self, user=None, count=None, since=None):
+  def GetUserTimeline(self, user=None, count=None, since=None, since_id=None):
     '''Fetch the sequence of public twitter.Status messages for a single user.
 
     The twitter.Api instance must be authenticated if the user is private.
@@ -995,6 +1000,9 @@ class Api(object):
       since:
         Narrows the returned results to just those statuses created
         after the specified HTTP-formatted date. [optional]
+      since_id:
+        Returns only statuses with an ID greater than (that is,
+        more recent than) the specified ID. [optional]
 
     Returns:
       A sequence of twitter.Status instances, one for each message up to count
@@ -1009,6 +1017,8 @@ class Api(object):
       parameters['count'] = count
     if since:
       parameters['since'] = since
+    if since_id:
+      parameters['since_id'] = since_id
     if user:
       url = 'http://twitter.com/statuses/user_timeline/%s.json' % user
     elif not user and not self._username:
