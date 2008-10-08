@@ -18,7 +18,7 @@ import twitter
 
 class StatusTest(unittest.TestCase):
 
-  SAMPLE_JSON = '''{"created_at": "Fri Jan 26 23:17:14 +0000 2007", "id": 4391023, "text": "A l\u00e9gp\u00e1rn\u00e1s haj\u00f3m tele van angoln\u00e1kkal.", "user": {"description": "Canvas. JC Penny. Three ninety-eight.", "id": 718443, "location": "Okinawa, Japan", "name": "Kesuke Miyagi", "profile_image_url": "http:\/\/twitter.com\/system\/user\/profile_image\/718443\/normal\/kesuke.png", "screen_name": "kesuke", "url": "http:\/\/twitter.com\/kesuke"}}'''
+  SAMPLE_JSON = '''{"created_at": "Fri Jan 26 23:17:14 +0000 2007", "id": 4391023, "text": "A l\\u00e9gp\\u00e1rn\\u00e1s haj\\u00f3m tele van angoln\\u00e1kkal.", "user": {"description": "Canvas. JC Penny. Three ninety-eight.", "id": 718443, "location": "Okinawa, Japan", "name": "Kesuke Miyagi", "profile_image_url": "http://twitter.com/system/user/profile_image/718443/normal/kesuke.png", "screen_name": "kesuke", "url": "http://twitter.com/kesuke"}}'''
 
   def _GetSampleUser(self):
     return twitter.User(id=718443,
@@ -147,7 +147,7 @@ class StatusTest(unittest.TestCase):
 
 class UserTest(unittest.TestCase):
 
-  SAMPLE_JSON = '''{"description": "Indeterminate things", "id": 673483, "location": "San Francisco, CA", "name": "DeWitt", "profile_image_url": "http:\/\/twitter.com\/system\/user\/profile_image\/673483\/normal\/me.jpg", "screen_name": "dewitt", "status": {"created_at": "Fri Jan 26 17:28:19 +0000 2007", "id": 4212713, "text": "\\"Select all\\" and archive your Gmail inbox.  The page loads so much faster!"}, "url": "http:\/\/unto.net\/"}'''
+  SAMPLE_JSON = '''{"description": "Indeterminate things", "id": 673483, "location": "San Francisco, CA", "name": "DeWitt", "profile_image_url": "http://twitter.com/system/user/profile_image/673483/normal/me.jpg", "screen_name": "dewitt", "status": {"created_at": "Fri Jan 26 17:28:19 +0000 2007", "id": 4212713, "text": "\\"Select all\\" and archive your Gmail inbox.  The page loads so much faster!"}, "url": "http://unto.net/"}'''
 
   def _GetSampleStatus(self):
     return twitter.Status(created_at='Fri Jan 26 17:28:19 +0000 2007',
