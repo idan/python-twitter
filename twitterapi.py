@@ -5,7 +5,7 @@
 '''A library that provides a python interface to the Twitter API'''
 
 __author__ = 'dewitt@google.com'
-__version__ = '0.6-devel'
+__version__ = '0.6.1-devel'
 
 
 import base64
@@ -19,7 +19,7 @@ import calendar
 import urllib
 import urllib2
 import urlparse
-import twitter
+import twitterapi
 
 class TwitterError(Exception):
   '''Base class for Twitter errors'''
@@ -47,7 +47,7 @@ class Status(object):
                now=None):
     '''An object to hold a Twitter status message.
 
-    This class is normally instantiated by the twitter.Api class and
+    This class is normally instantiated by the twitterapi.Api class and
     returned in a sequence.
 
     Note: Dates are posted in the form "Sat Jan 27 04:17:38 +0000 2007"
@@ -60,7 +60,7 @@ class Status(object):
       relative_created_at:
         A human readable string representing the posting time
       user:
-        A twitter.User instance representing the person posting the message
+        A twitterapi.User instance representing the person posting the message
       now:
         The current time, if the client choses to set it.  Defaults to the
         wall clock time.
@@ -191,23 +191,23 @@ class Status(object):
                                      'the posting time')
 
   def GetUser(self):
-    '''Get a twitter.User reprenting the entity posting this status message.
+    '''Get a twitterapi.User reprenting the entity posting this status message.
 
     Returns:
-      A twitter.User reprenting the entity posting this status message
+      A twitterapi.User reprenting the entity posting this status message
     '''
     return self._user
 
   def SetUser(self, user):
-    '''Set a twitter.User reprenting the entity posting this status message.
+    '''Set a twitterapi.User reprenting the entity posting this status message.
 
     Args:
-      user: A twitter.User reprenting the entity posting this status message
+      user: A twitterapi.User reprenting the entity posting this status message
     '''
     self._user = user
 
   user = property(GetUser, SetUser,
-                  doc='A twitter.User reprenting the entity posting this '
+                  doc='A twitterapi.User reprenting the entity posting this '
                       'status message')
 
   def GetNow(self):
@@ -253,30 +253,30 @@ class Status(object):
       return False
 
   def __str__(self):
-    '''A string representation of this twitter.Status instance.
+    '''A string representation of this twitterapi.Status instance.
 
     The return value is the same as the JSON string representation.
 
     Returns:
-      A string representation of this twitter.Status instance.
+      A string representation of this twitterapi.Status instance.
     '''
     return self.AsJsonString()
 
   def AsJsonString(self):
-    '''A JSON string representation of this twitter.Status instance.
+    '''A JSON string representation of this twitterapi.Status instance.
 
     Returns:
-      A JSON string representation of this twitter.Status instance
+      A JSON string representation of this twitterapi.Status instance
    '''
     return simplejson.dumps(self.AsDict(), sort_keys=True)
 
   def AsDict(self):
-    '''A dict representation of this twitter.Status instance.
+    '''A dict representation of this twitterapi.Status instance.
 
     The return value uses the same key names as the JSON representation.
 
     Return:
-      A dict representing this twitter.Status instance
+      A dict representing this twitterapi.Status instance
     '''
     data = {}
     if self.created_at:
@@ -298,7 +298,7 @@ class Status(object):
     Args:
       data: A JSON dict, as converted from the JSON in the twitter API
     Returns:
-      A twitter.Status instance
+      A twitterapi.Status instance
     '''
     if 'user' in data:
       user = User.NewFromJsonDict(data['user'])
@@ -478,23 +478,23 @@ class User(object):
                               doc='The url of the thumbnail of this user.')
 
   def GetStatus(self):
-    '''Get the latest twitter.Status of this user.
+    '''Get the latest twitterapi.Status of this user.
 
     Returns:
-      The latest twitter.Status of this user
+      The latest twitterapi.Status of this user
     '''
     return self._status
 
   def SetStatus(self, status):
-    '''Set the latest twitter.Status of this user.
+    '''Set the latest twitterapi.Status of this user.
 
     Args:
-      status: The latest twitter.Status of this user
+      status: The latest twitterapi.Status of this user
     '''
     self._status = status
 
   status = property(GetStatus, SetStatus,
-                  doc='The latest twitter.Status of this user.')
+                  doc='The latest twitterapi.Status of this user.')
 
   def __ne__(self, other):
     return not self.__eq__(other)
@@ -514,30 +514,30 @@ class User(object):
       return False
 
   def __str__(self):
-    '''A string representation of this twitter.User instance.
+    '''A string representation of this twitterapi.User instance.
 
     The return value is the same as the JSON string representation.
 
     Returns:
-      A string representation of this twitter.User instance.
+      A string representation of this twitterapi.User instance.
     '''
     return self.AsJsonString()
 
   def AsJsonString(self):
-    '''A JSON string representation of this twitter.User instance.
+    '''A JSON string representation of this twitterapi.User instance.
 
     Returns:
-      A JSON string representation of this twitter.User instance
+      A JSON string representation of this twitterapi.User instance
    '''
     return simplejson.dumps(self.AsDict(), sort_keys=True)
 
   def AsDict(self):
-    '''A dict representation of this twitter.User instance.
+    '''A dict representation of this twitterapi.User instance.
 
     The return value uses the same key names as the JSON representation.
 
     Return:
-      A dict representing this twitter.User instance
+      A dict representing this twitterapi.User instance
     '''
     data = {}
     if self.id:
@@ -565,7 +565,7 @@ class User(object):
     Args:
       data: A JSON dict, as converted from the JSON in the twitter API
     Returns:
-      A twitter.User instance
+      A twitterapi.User instance
     '''
     if 'status' in data:
       status = Status.NewFromJsonDict(data['status'])
@@ -605,7 +605,7 @@ class DirectMessage(object):
                text=None):
     '''An object to hold a Twitter direct message.
 
-    This class is normally instantiated by the twitter.Api class and
+    This class is normally instantiated by the twitterapi.Api class and
     returned in a sequence.
 
     Note: Dates are posted in the form "Sat Jan 27 04:17:38 +0000 2007"
@@ -789,30 +789,30 @@ class DirectMessage(object):
       return False
 
   def __str__(self):
-    '''A string representation of this twitter.DirectMessage instance.
+    '''A string representation of this twitterapi.DirectMessage instance.
 
     The return value is the same as the JSON string representation.
 
     Returns:
-      A string representation of this twitter.DirectMessage instance.
+      A string representation of this twitterapi.DirectMessage instance.
     '''
     return self.AsJsonString()
 
   def AsJsonString(self):
-    '''A JSON string representation of this twitter.DirectMessage instance.
+    '''A JSON string representation of this twitterapi.DirectMessage instance.
 
     Returns:
-      A JSON string representation of this twitter.DirectMessage instance
+      A JSON string representation of this twitterapi.DirectMessage instance
    '''
     return simplejson.dumps(self.AsDict(), sort_keys=True)
 
   def AsDict(self):
-    '''A dict representation of this twitter.DirectMessage instance.
+    '''A dict representation of this twitterapi.DirectMessage instance.
 
     The return value uses the same key names as the JSON representation.
 
     Return:
-      A dict representing this twitter.DirectMessage instance
+      A dict representing this twitterapi.DirectMessage instance
     '''
     data = {}
     if self.id:
@@ -838,7 +838,7 @@ class DirectMessage(object):
     Args:
       data: A JSON dict, as converted from the JSON in the twitter API
     Returns:
-      A twitter.DirectMessage instance
+      A twitterapi.DirectMessage instance
     '''
     return DirectMessage(created_at=data.get('created_at', None),
                          recipient_id=data.get('recipient_id', None),
@@ -855,10 +855,10 @@ class Api(object):
 
   Example usage:
 
-    To create an instance of the twitter.Api class, with no authentication:
+    To create an instance of the twitterapi.Api class, with no authentication:
 
       >>> import twitter
-      >>> api = twitter.Api()
+      >>> api = twitterapi.Api()
 
     To fetch the most recently posted public twitter status messages:
 
@@ -872,10 +872,10 @@ class Api(object):
       >>> statuses = api.GetUserTimeline(user)
       >>> print [s.text for s in statuses]
 
-    To use authentication, instantiate the twitter.Api class with a
+    To use authentication, instantiate the twitterapi.Api class with a
     username and password:
 
-      >>> api = twitter.Api(username='twitter user', password='twitter pass')
+      >>> api = twitterapi.Api(username='twitter user', password='twitter pass')
 
     To fetch your friends (after being authenticated):
 
@@ -916,7 +916,7 @@ class Api(object):
                password=None,
                input_encoding=None,
                request_headers=None):
-    '''Instantiate a new twitter.Api object.
+    '''Instantiate a new twitterapi.Api object.
 
     Args:
       username: The username of the twitter account.  [optional]
@@ -934,7 +934,7 @@ class Api(object):
     self.SetCredentials(username, password)
 
   def GetPublicTimeline(self, since_id=None):
-    '''Fetch the sequnce of public twitter.Status message for all users.
+    '''Fetch the sequnce of public twitterapi.Status message for all users.
 
     Args:
       since_id:
@@ -942,7 +942,7 @@ class Api(object):
         more recent than) the specified ID. [Optional]
 
     Returns:
-      An sequence of twitter.Status instances, one for each message
+      An sequence of twitterapi.Status instances, one for each message
     '''
     parameters = {}
     if since_id:
@@ -953,15 +953,15 @@ class Api(object):
     return [Status.NewFromJsonDict(x) for x in data]
 
   def GetFriendsTimeline(self, user=None, since=None, since_id=None):
-    '''Fetch the sequence of twitter.Status messages for a user's friends
+    '''Fetch the sequence of twitterapi.Status messages for a user's friends
 
-    The twitter.Api instance must be authenticated if the user is private.
+    The twitterapi.Api instance must be authenticated if the user is private.
 
     Args:
       user:
         Specifies the ID or screen name of the user for whom to return
         the friends_timeline.  If unspecified, the username and password
-        must be set in the twitter.Api instance.  [optional]
+        must be set in the twitterapi.Api instance.  [optional]
       since:
         Narrows the returned results to just those statuses created
         after the specified HTTP-formatted date. [optional]
@@ -970,7 +970,7 @@ class Api(object):
         more recent than) the specified ID. [optional]
 
     Returns:
-      A sequence of twitter.Status instances, one for each message
+      A sequence of twitterapi.Status instances, one for each message
     '''
     if user:
       url = 'http://twitter.com/statuses/friends_timeline/%s.json' % user
@@ -988,9 +988,9 @@ class Api(object):
     return [Status.NewFromJsonDict(x) for x in data]
 
   def GetUserTimeline(self, user=None, count=None, since=None, since_id=None):
-    '''Fetch the sequence of public twitter.Status messages for a single user.
+    '''Fetch the sequence of public twitterapi.Status messages for a single user.
 
-    The twitter.Api instance must be authenticated if the user is private.
+    The twitterapi.Api instance must be authenticated if the user is private.
 
     Args:
       user:
@@ -1005,7 +1005,7 @@ class Api(object):
         more recent than) the specified ID. [optional]
 
     Returns:
-      A sequence of twitter.Status instances, one for each message up to count
+      A sequence of twitterapi.Status instances, one for each message up to count
     '''
     try:
       if count:
@@ -1032,13 +1032,13 @@ class Api(object):
   def GetStatus(self, id):
     '''Returns a single status message.
 
-    The twitter.Api instance must be authenticated if the status message is private.
+    The twitterapi.Api instance must be authenticated if the status message is private.
 
     Args:
       id: The numerical ID of the status you're trying to retrieve.
 
     Returns:
-      A twitter.Status instance representing that status message
+      A twitterapi.Status instance representing that status message
     '''
     try:
       if id:
@@ -1053,14 +1053,14 @@ class Api(object):
   def DestroyStatus(self, id):
     '''Destroys the status specified by the required ID parameter.
 
-    The twitter.Api instance must be authenticated and thee
+    The twitterapi.Api instance must be authenticated and thee
     authenticating user must be the author of the specified status.
 
     Args:
       id: The numerical ID of the status you're trying to destroy.
 
     Returns:
-      A twitter.Status instance representing the destroyed status message
+      A twitterapi.Status instance representing the destroyed status message
     '''
     try:
       if id:
@@ -1075,16 +1075,16 @@ class Api(object):
   def PostUpdate(self, text):
     '''Post a twitter status message from the authenticated user.
 
-    The twitter.Api instance must be authenticated.
+    The twitterapi.Api instance must be authenticated.
 
     Args:
       text: The message text to be posted.  Must be less than 140 characters.
 
     Returns:
-      A twitter.Status instance representing the message posted
+      A twitterapi.Status instance representing the message posted
     '''
     if not self._username:
-      raise TwitterError("The twitter.Api instance must be authenticated.")
+      raise TwitterError("The twitterapi.Api instance must be authenticated.")
     if len(text) > 140:
       raise TwitterError("Text must be less than or equal to 140 characters.")
     url = 'http://twitter.com/statuses/update.json'
@@ -1099,29 +1099,29 @@ class Api(object):
     user.
 
     Returns:
-      A sequence of twitter.Status instances, one for each reply to the user.
+      A sequence of twitterapi.Status instances, one for each reply to the user.
     '''
     url = 'http://twitter.com/statuses/replies.json'
     if not self._username:
-      raise TwitterError("The twitter.Api instance must be authenticated.")
+      raise TwitterError("The twitterapi.Api instance must be authenticated.")
     json = self._FetchUrl(url)
     data = simplejson.loads(json)
     return [Status.NewFromJsonDict(x) for x in data]
 
   def GetFriends(self, user=None):
-    '''Fetch the sequence of twitter.User instances, one for each friend.
+    '''Fetch the sequence of twitterapi.User instances, one for each friend.
 
     Args:
       user: the username or id of the user whose friends you are fetching.  If
       not specified, defaults to the authenticated user. [optional]
 
-    The twitter.Api instance must be authenticated.
+    The twitterapi.Api instance must be authenticated.
 
     Returns:
-      A sequence of twitter.User instances, one for each friend
+      A sequence of twitterapi.User instances, one for each friend
     '''
     if not self._username:
-      raise TwitterError("twitter.Api instance must be authenticated")
+      raise TwitterError("twitterapi.Api instance must be authenticated")
     if user:
       url = 'http://twitter.com/statuses/friends/%s.json' % user
     else:
@@ -1131,27 +1131,27 @@ class Api(object):
     return [User.NewFromJsonDict(x) for x in data]
 
   def GetFollowers(self):
-    '''Fetch the sequence of twitter.User instances, one for each follower
+    '''Fetch the sequence of twitterapi.User instances, one for each follower
 
-    The twitter.Api instance must be authenticated.
+    The twitterapi.Api instance must be authenticated.
 
     Returns:
-      A sequence of twitter.User instances, one for each follower
+      A sequence of twitterapi.User instances, one for each follower
     '''
     if not self._username:
-      raise TwitterError("twitter.Api instance must be authenticated")
+      raise TwitterError("twitterapi.Api instance must be authenticated")
     url = 'http://twitter.com/statuses/followers.json'
     json = self._FetchUrl(url)
     data = simplejson.loads(json)
     return [User.NewFromJsonDict(x) for x in data]
 
   def GetFeatured(self):
-    '''Fetch the sequence of twitter.User instances featured on twitter.com
+    '''Fetch the sequence of twitterapi.User instances featured on twitter.com
 
-    The twitter.Api instance must be authenticated.
+    The twitterapi.Api instance must be authenticated.
 
     Returns:
-      A sequence of twitter.User instances
+      A sequence of twitterapi.User instances
     '''
     url = 'http://twitter.com/statuses/featured.json'
     json = self._FetchUrl(url)
@@ -1161,13 +1161,13 @@ class Api(object):
   def GetUser(self, user):
     '''Returns a single user.
 
-    The twitter.Api instance must be authenticated.
+    The twitterapi.Api instance must be authenticated.
 
     Args:
       user: The username or id of the user to retrieve.
 
     Returns:
-      A twitter.User instance representing that user
+      A twitterapi.User instance representing that user
     '''
     url = 'http://twitter.com/users/show/%s.json' % user
     json = self._FetchUrl(url)
@@ -1177,7 +1177,7 @@ class Api(object):
   def GetDirectMessages(self, since=None):
     '''Returns a list of the direct messages sent to the authenticating user.
 
-    The twitter.Api instance must be authenticated.
+    The twitterapi.Api instance must be authenticated.
 
     Args:
       since:
@@ -1185,11 +1185,11 @@ class Api(object):
         after the specified HTTP-formatted date. [optional]
 
     Returns:
-      A sequence of twitter.DirectMessage instances
+      A sequence of twitterapi.DirectMessage instances
     '''
     url = 'http://twitter.com/direct_messages.json'
     if not self._username:
-      raise TwitterError("The twitter.Api instance must be authenticated.")
+      raise TwitterError("The twitterapi.Api instance must be authenticated.")
     parameters = {}
     if since:
       parameters['since'] = since
@@ -1200,17 +1200,17 @@ class Api(object):
   def PostDirectMessage(self, user, text):
     '''Post a twitter direct message from the authenticated user
 
-    The twitter.Api instance must be authenticated.
+    The twitterapi.Api instance must be authenticated.
 
     Args:
       user: The ID or screen name of the recipient user.
       text: The message text to be posted.  Must be less than 140 characters.
 
     Returns:
-      A twitter.DirectMessage instance representing the message posted
+      A twitterapi.DirectMessage instance representing the message posted
     '''
     if not self._username:
-      raise TwitterError("The twitter.Api instance must be authenticated.")
+      raise TwitterError("The twitterapi.Api instance must be authenticated.")
     url = 'http://twitter.com/direct_messages/new.json'
     data = {'text': text, 'user': user}
     json = self._FetchUrl(url, post_data=data)
@@ -1220,7 +1220,7 @@ class Api(object):
   def DestroyDirectMessage(self, id):
     '''Destroys the direct message specified in the required ID parameter.
 
-    The twitter.Api instance must be authenticated, and the
+    The twitterapi.Api instance must be authenticated, and the
     authenticating user must be the recipient of the specified direct
     message.
 
@@ -1228,7 +1228,7 @@ class Api(object):
       id: The id of the direct message to be destroyed
 
     Returns:
-      A twitter.DirectMessage instance representing the message destroyed
+      A twitterapi.DirectMessage instance representing the message destroyed
     '''
     url = 'http://twitter.com/direct_messages/destroy/%s.json' % id
     json = self._FetchUrl(url, post_data={})
@@ -1238,12 +1238,12 @@ class Api(object):
   def CreateFriendship(self, user):
     '''Befriends the user specified in the user parameter as the authenticating user.
 
-    The twitter.Api instance must be authenticated.
+    The twitterapi.Api instance must be authenticated.
 
     Args:
       The ID or screen name of the user to befriend.
     Returns:
-      A twitter.User instance representing the befriended user.
+      A twitterapi.User instance representing the befriended user.
     '''
     url = 'http://twitter.com/friendships/create/%s.json' % user
     json = self._FetchUrl(url, post_data={})
@@ -1253,12 +1253,12 @@ class Api(object):
   def DestroyFriendship(self, user):
     '''Discontinues friendship with the user specified in the user parameter.
 
-    The twitter.Api instance must be authenticated.
+    The twitterapi.Api instance must be authenticated.
 
     Args:
       The ID or screen name of the user  with whom to discontinue friendship.
     Returns:
-      A twitter.User instance representing the discontinued friend.
+      A twitterapi.User instance representing the discontinued friend.
     '''
     url = 'http://twitter.com/friendships/destroy/%s.json' % user
     json = self._FetchUrl(url, post_data={})
@@ -1269,12 +1269,12 @@ class Api(object):
     '''Favorites the status specified in the status parameter as the authenticating user.
     Returns the favorite status when successful.
 
-    The twitter.Api instance must be authenticated.
+    The twitterapi.Api instance must be authenticated.
 
     Args:
-      The twitter.Status instance to mark as a favorite.
+      The twitterapi.Status instance to mark as a favorite.
     Returns:
-      A twitter.Status instance representing the newly-marked favorite.
+      A twitterapi.Status instance representing the newly-marked favorite.
     '''
     url = 'http://twitter.com/favorites/create/%s.json' % status.id
     json = self._FetchUrl(url, post_data={})
@@ -1285,12 +1285,12 @@ class Api(object):
     '''Un-favorites the status specified in the ID parameter as the authenticating user.
     Returns the un-favorited status in the requested format when successful.
 
-    The twitter.Api instance must be authenticated.
+    The twitterapi.Api instance must be authenticated.
 
     Args:
-      The twitter.Status to unmark as a favorite.
+      The twitterapi.Status to unmark as a favorite.
     Returns:
-      A twitter.Status instance representing the newly-unmarked favorite.
+      A twitterapi.Status instance representing the newly-unmarked favorite.
     '''
     url = 'http://twitter.com/favorites/destroy/%s.json' % status.id
     json = self._FetchUrl(url, post_data={})
@@ -1317,7 +1317,7 @@ class Api(object):
     '''Override the default cache.  Set to None to prevent caching.
 
     Args:
-      cache: an instance that supports the same API as the  twitter._FileCache
+      cache: an instance that supports the same API as the  twitterapi._FileCache
     '''
     self._cache = cache
 
@@ -1409,7 +1409,7 @@ class Api(object):
 
   def _InitializeUserAgent(self):
     user_agent = 'Python-urllib/%s (python-twitter/%s)' % \
-                 (self._urllib.__version__, twitter.__version__)
+                 (self._urllib.__version__, twitterapi.__version__)
     self.SetUserAgent(user_agent)
 
   def _InitializeDefaultParameters(self):

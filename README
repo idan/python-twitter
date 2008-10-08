@@ -73,34 +73,34 @@ the twitter data model.
 
 *Model:*
 
-The three model classes are twitter.Status, twitter.User, and
-twitter.DirectMessage.  The API methods return instances of these
+The three model classes are twitterapi.Status, twitterapi.User, and
+twitterapi.DirectMessage.  The API methods return instances of these
 classes.
 
-To read the full API for twitter.Status, twitter.User, or
-twitter.DirectMessage, run:
+To read the full API for twitterapi.Status, twitterapi.User, or
+twitterapi.DirectMessage, run:
 
 {{{
-  $ pydoc twitter.Status
-  $ pydoc twitter.User
-  $ pydoc twitter.DirectMessage
+  $ pydoc twitterapi.Status
+  $ pydoc twitterapi.User
+  $ pydoc twitterapi.DirectMessage
 }}}
 
 *API:*
 
-The API is exposed via the twitter.Api class.
+The API is exposed via the twitterapi.Api class.
 
-To create an instance of the twitter.Api class:
+To create an instance of the twitterapi.Api class:
 
 {{{
-  >>> import twitter
-  >>> api = twitter.Api()
+  >>> import twitterapi
+  >>> api = twitterapi.Api()
 }}}
 
-To create an instance of the twitter.Api with login credentials (many API
+To create an instance of the twitterapi.Api with login credentials (many API
 calls required the client to be authenticated):
 
-  >>> api = twitter.Api(username='username', password='password) 
+  >>> api = twitterapi.Api(username='username', password='password) 
 
 To fetch the most recently posted public twitter status messages:
 
@@ -136,7 +136,7 @@ To post a twitter status message (requires authentication):
 There are many more API methods, to read the full API documentation:
 
 {{{
-  $ pydoc twitter.Api
+  $ pydoc twitterapi.Api
 }}}
 
 ==Todo==
@@ -146,13 +146,13 @@ consistent with the original source.
 
 Add more example scripts.
 
-The twitter.Status and twitter.User classes are going to be hard
+The twitterapi.Status and twitterapi.User classes are going to be hard
 to keep in sync with the API if the API changes.  More of the 
 code could probably be written with introspection.
 
-Statement coverage of twitter_test is only about 80% of twitter.py.
+Statement coverage of twitter_test is only about 80% of twitterapi.py.
 
-The twitter.Status and twitter.User classes could perform more validation
+The twitterapi.Status and twitterapi.User classes could perform more validation
 on the property setters.
 
 ==More Information==

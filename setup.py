@@ -5,14 +5,14 @@
 '''The setup and build script for the python-twitter library.'''
 
 __author__ = 'dewitt@google.com'
-__version__ = '0.6-devel'
+__version__ = '0.6.1-devel'
 
 
 # The base package metadata to be used by both distutils and setuptools
 METADATA = dict(
   name = "python-twitter",
   version = __version__,
-  py_modules = ['twitter'],
+  py_modules = ['twitterapi'],
   author='DeWitt Clinton',
   author_email='dewitt@google.com',
   description='A python wrapper around the Twitter API',

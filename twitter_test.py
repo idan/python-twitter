@@ -4,7 +4,7 @@
 #
 # Copyright 2007 Google Inc. All Rights Reserved.
 
-'''Unit tests for the twitter.py library'''
+'''Unit tests for the twitterapi.py library'''
 
 __author__ = 'dewitt@google.com'
 
@@ -14,14 +14,14 @@ import time
 import calendar
 import unittest
 
-import twitter
+import twitterapi
 
 class StatusTest(unittest.TestCase):
 
   SAMPLE_JSON = '''{"created_at": "Fri Jan 26 23:17:14 +0000 2007", "id": 4391023, "text": "A l\\u00e9gp\\u00e1rn\\u00e1s haj\\u00f3m tele van angoln\\u00e1kkal.", "user": {"description": "Canvas. JC Penny. Three ninety-eight.", "id": 718443, "location": "Okinawa, Japan", "name": "Kesuke Miyagi", "profile_image_url": "http://twitter.com/system/user/profile_image/718443/normal/kesuke.png", "screen_name": "kesuke", "url": "http://twitter.com/kesuke"}}'''
 
   def _GetSampleUser(self):
-    return twitter.User(id=718443,
+    return twitterapi.User(id=718443,
                         name='Kesuke Miyagi',
                         screen_name='kesuke',
                         description=u'Canvas. JC Penny. Three ninety-eight.',
@@ -32,21 +32,21 @@ class StatusTest(unittest.TestCase):
                                           'g')
 
   def _GetSampleStatus(self):
-    return twitter.Status(created_at='Fri Jan 26 23:17:14 +0000 2007',
+    return twitterapi.Status(created_at='Fri Jan 26 23:17:14 +0000 2007',
                           id=4391023,
                           text=u'A légpárnás hajóm tele van angolnákkal.',
                           user=self._GetSampleUser())
 
   def testInit(self):
-    '''Test the twitter.Status constructor'''
-    status = twitter.Status(created_at='Fri Jan 26 23:17:14 +0000 2007',
+    '''Test the twitterapi.Status constructor'''
+    status = twitterapi.Status(created_at='Fri Jan 26 23:17:14 +0000 2007',
                             id=4391023,
                             text=u'A légpárnás hajóm tele van angolnákkal.',
                             user=self._GetSampleUser())
 
   def testGettersAndSetters(self):
-    '''Test all of the twitter.Status getters and setters'''
-    status = twitter.Status()
+    '''Test all of the twitterapi.Status getters and setters'''
+    status = twitterapi.Status()
     status.SetId(4391023)
     self.assertEqual(4391023, status.GetId())
     created_at = calendar.timegm((2007, 1, 26, 23, 17, 14, -1, -1, -1))
@@ -62,8 +62,8 @@ class StatusTest(unittest.TestCase):
     self.assertEqual(718443, status.GetUser().id)
 
   def testProperties(self):
-    '''Test all of the twitter.Status properties'''
-    status = twitter.Status()
+    '''Test all of the twitterapi.Status properties'''
+    status = twitterapi.Status()
     status.id = 1
     self.assertEqual(1, status.id)
     created_at = calendar.timegm((2007, 1, 26, 23, 17, 14, -1, -1, -1))
@@ -80,7 +80,7 @@ class StatusTest(unittest.TestCase):
 
   def testRelativeCreatedAt(self):
     '''Test various permutations of Status relative_created_at'''
-    status = twitter.Status(created_at='Fri Jan 01 12:00:00 +0000 2007')
+    status = twitterapi.Status(created_at='Fri Jan 01 12:00:00 +0000 2007')
     status.now = self._ParseDate('Jan 01 12:00:00 2007')
     self.assertEqual('about a second ago', status.relative_created_at)
     status.now = self._ParseDate('Jan 01 12:00:01 2007')
@@ -117,12 +117,12 @@ class StatusTest(unittest.TestCase):
     self.assertEqual('about 34 days ago', status.relative_created_at)
 
   def testAsJsonString(self):
-    '''Test the twitter.Status AsJsonString method'''
+    '''Test the twitterapi.Status AsJsonString method'''
     self.assertEqual(StatusTest.SAMPLE_JSON,
                      self._GetSampleStatus().AsJsonString())
 
   def testAsDict(self):
-    '''Test the twitter.Status AsDict method'''
+    '''Test the twitterapi.Status AsDict method'''
     status = self._GetSampleStatus()
     data = status.AsDict()
     self.assertEqual(4391023, data['id'])
@@ -131,8 +131,8 @@ class StatusTest(unittest.TestCase):
     self.assertEqual(718443, data['user']['id'])
 
   def testEq(self):
-    '''Test the twitter.Status __eq__ method'''
-    status = twitter.Status()
+    '''Test the twitterapi.Status __eq__ method'''
+    status = twitterapi.Status()
     status.created_at = 'Fri Jan 26 23:17:14 +0000 2007'
     status.id = 4391023
     status.text = u'A légpárnás hajóm tele van angolnákkal.'
@@ -140,9 +140,9 @@ class StatusTest(unittest.TestCase):
     self.assertEqual(status, self._GetSampleStatus())
 
   def testNewFromJsonDict(self):
-    '''Test the twitter.Status NewFromJsonDict method'''
+    '''Test the twitterapi.Status NewFromJsonDict method'''
     data = simplejson.loads(StatusTest.SAMPLE_JSON)
-    status = twitter.Status.NewFromJsonDict(data)
+    status = twitterapi.Status.NewFromJsonDict(data)
     self.assertEqual(self._GetSampleStatus(), status)
 
 class UserTest(unittest.TestCase):
@@ -150,13 +150,13 @@ class UserTest(unittest.TestCase):
   SAMPLE_JSON = '''{"description": "Indeterminate things", "id": 673483, "location": "San Francisco, CA", "name": "DeWitt", "profile_image_url": "http://twitter.com/system/user/profile_image/673483/normal/me.jpg", "screen_name": "dewitt", "status": {"created_at": "Fri Jan 26 17:28:19 +0000 2007", "id": 4212713, "text": "\\"Select all\\" and archive your Gmail inbox.  The page loads so much faster!"}, "url": "http://unto.net/"}'''
 
   def _GetSampleStatus(self):
-    return twitter.Status(created_at='Fri Jan 26 17:28:19 +0000 2007',
+    return twitterapi.Status(created_at='Fri Jan 26 17:28:19 +0000 2007',
                           id=4212713,
                           text='"Select all" and archive your Gmail inbox. '
                                ' The page loads so much faster!')
 
   def _GetSampleUser(self):
-    return twitter.User(id=673483,
+    return twitterapi.User(id=673483,
                         name='DeWitt',
                         screen_name='dewitt',
                         description=u'Indeterminate things',
@@ -169,8 +169,8 @@ class UserTest(unittest.TestCase):
 
 
   def testInit(self):
-    '''Test the twitter.User constructor'''
-    user = twitter.User(id=673483,
+    '''Test the twitterapi.User constructor'''
+    user = twitterapi.User(id=673483,
                         name='DeWitt',
                         screen_name='dewitt',
                         description=u'Indeterminate things',
@@ -180,8 +180,8 @@ class UserTest(unittest.TestCase):
                         status=self._GetSampleStatus())
 
   def testGettersAndSetters(self):
-    '''Test all of the twitter.User getters and setters'''
-    user = twitter.User()
+    '''Test all of the twitterapi.User getters and setters'''
+    user = twitterapi.User()
     user.SetId(673483)
     self.assertEqual(673483, user.GetId())
     user.SetName('DeWitt')
@@ -200,8 +200,8 @@ class UserTest(unittest.TestCase):
     self.assertEqual(4212713, user.GetStatus().id)
 
   def testProperties(self):
-    '''Test all of the twitter.User properties'''
-    user = twitter.User()
+    '''Test all of the twitterapi.User properties'''
+    user = twitterapi.User()
     user.id = 673483
     self.assertEqual(673483, user.id)
     user.name = 'DeWitt'
@@ -220,12 +220,12 @@ class UserTest(unittest.TestCase):
     self.assertEqual(4212713, self.status.id)
 
   def testAsJsonString(self):
-    '''Test the twitter.User AsJsonString method'''
+    '''Test the twitterapi.User AsJsonString method'''
     self.assertEqual(UserTest.SAMPLE_JSON,
                      self._GetSampleUser().AsJsonString())
 
   def testAsDict(self):
-    '''Test the twitter.User AsDict method'''
+    '''Test the twitterapi.User AsDict method'''
     user = self._GetSampleUser()
     data = user.AsDict()
     self.assertEqual(673483, data['id'])
@@ -239,8 +239,8 @@ class UserTest(unittest.TestCase):
     self.assertEqual(4212713, data['status']['id'])
 
   def testEq(self):
-    '''Test the twitter.User __eq__ method'''
-    user = twitter.User()
+    '''Test the twitterapi.User __eq__ method'''
+    user = twitterapi.User()
     user.id = 673483
     user.name = 'DeWitt'
     user.screen_name = 'dewitt'
@@ -253,45 +253,45 @@ class UserTest(unittest.TestCase):
     self.assertEqual(user, self._GetSampleUser())
 
   def testNewFromJsonDict(self):
-    '''Test the twitter.User NewFromJsonDict method'''
+    '''Test the twitterapi.User NewFromJsonDict method'''
     data = simplejson.loads(UserTest.SAMPLE_JSON)
-    user = twitter.User.NewFromJsonDict(data)
+    user = twitterapi.User.NewFromJsonDict(data)
     self.assertEqual(self._GetSampleUser(), user)
 
 
 class FileCacheTest(unittest.TestCase):
 
   def testInit(self):
-    """Test the twitter._FileCache constructor"""
-    cache = twitter._FileCache()
+    """Test the twitterapi._FileCache constructor"""
+    cache = twitterapi._FileCache()
     self.assert_(cache is not None, 'cache is None')
 
   def testSet(self):
-    """Test the twitter._FileCache.Set method"""
-    cache = twitter._FileCache()
+    """Test the twitterapi._FileCache.Set method"""
+    cache = twitterapi._FileCache()
     cache.Set("foo",'Hello World!')
     cache.Remove("foo")
 
   def testRemove(self):
-    """Test the twitter._FileCache.Remove method"""
-    cache = twitter._FileCache()
+    """Test the twitterapi._FileCache.Remove method"""
+    cache = twitterapi._FileCache()
     cache.Set("foo",'Hello World!')
     cache.Remove("foo")
     data = cache.Get("foo")
     self.assertEqual(data, None, 'data is not None')
 
   def testGet(self):
-    """Test the twitter._FileCache.Get method"""
-    cache = twitter._FileCache()
+    """Test the twitterapi._FileCache.Get method"""
+    cache = twitterapi._FileCache()
     cache.Set("foo",'Hello World!')
     data = cache.Get("foo")
     self.assertEqual('Hello World!', data)
     cache.Remove("foo")
 
   def testGetCachedTime(self):
-    """Test the twitter._FileCache.GetCachedTime method"""
+    """Test the twitterapi._FileCache.GetCachedTime method"""
     now = time.time()
-    cache = twitter._FileCache()
+    cache = twitterapi._FileCache()
     cache.Set("foo",'Hello World!')
     cached_time = cache.GetCachedTime("foo")
     delta = cached_time - now
@@ -303,13 +303,13 @@ class ApiTest(unittest.TestCase):
 
   def setUp(self):
     self._urllib = MockUrllib()
-    api = twitter.Api(username='test', password='test')
+    api = twitterapi.Api(username='test', password='test')
     api.SetCache(NullCache())
     api.SetUrllib(self._urllib)
     self._api = api
 
   def testGetPublicTimeline(self):
-    '''Test the twitter.Api GetPublicTimeline method'''
+    '''Test the twitterapi.Api GetPublicTimeline method'''
     self._AddHandler('http://twitter.com/statuses/public_timeline.json?since_id=12345',
                      curry(self._OpenTestData, 'public_timeline.json'))
     statuses = self._api.GetPublicTimeline(since_id=12345)
@@ -318,7 +318,7 @@ class ApiTest(unittest.TestCase):
     self.assertEqual(89497702, statuses[0].id)
 
   def testGetUserTimeline(self):
-    '''Test the twitter.Api GetUserTimeline method'''
+    '''Test the twitterapi.Api GetUserTimeline method'''
     self._AddHandler('http://twitter.com/statuses/user_timeline/kesuke.json?count=1&since=Tue%2C+27+Mar+2007+22%3A55%3A48+GMT',
                      curry(self._OpenTestData, 'user_timeline-kesuke.json'))
     statuses = self._api.GetUserTimeline('kesuke', count=1, since='Tue, 27 Mar 2007 22:55:48 GMT')
@@ -327,7 +327,7 @@ class ApiTest(unittest.TestCase):
     self.assertEqual(718443, statuses[0].user.id)
 
   def testGetFriendsTimeline(self):
-    '''Test the twitter.Api GetFriendsTimeline method'''
+    '''Test the twitterapi.Api GetFriendsTimeline method'''
     self._AddHandler('http://twitter.com/statuses/friends_timeline/kesuke.json',
                      curry(self._OpenTestData, 'friends_timeline-kesuke.json'))
     statuses = self._api.GetFriendsTimeline('kesuke')
@@ -336,7 +336,7 @@ class ApiTest(unittest.TestCase):
     self.assertEqual(718443, statuses[0].user.id)
 
   def testGetStatus(self):
-    '''Test the twitter.Api GetStatus method'''
+    '''Test the twitterapi.Api GetStatus method'''
     self._AddHandler('http://twitter.com/statuses/show/89512102.json',
                      curry(self._OpenTestData, 'show-89512102.json'))
     status = self._api.GetStatus(89512102)
@@ -344,14 +344,14 @@ class ApiTest(unittest.TestCase):
     self.assertEqual(718443, status.user.id)
 
   def testDestroyStatus(self):
-    '''Test the twitter.Api DestroyStatus method'''
+    '''Test the twitterapi.Api DestroyStatus method'''
     self._AddHandler('http://twitter.com/statuses/destroy/103208352.json',
                      curry(self._OpenTestData, 'status-destroy.json'))
     status = self._api.DestroyStatus(103208352)
     self.assertEqual(103208352, status.id)
 
   def testPostUpdate(self):
-    '''Test the twitter.Api PostUpdate method'''
+    '''Test the twitterapi.Api PostUpdate method'''
     self._AddHandler('http://twitter.com/statuses/update.json',
                      curry(self._OpenTestData, 'update.json'))
     status = self._api.PostUpdate(u'Моё судно на воздушной подушке полно угрей')
@@ -359,14 +359,14 @@ class ApiTest(unittest.TestCase):
     self.assertEqual(u'Моё судно на воздушной подушке полно угрей', status.text)
 
   def testGetReplies(self):
-    '''Test the twitter.Api GetReplies method'''
+    '''Test the twitterapi.Api GetReplies method'''
     self._AddHandler('http://twitter.com/statuses/replies.json',
                      curry(self._OpenTestData, 'replies.json'))
     statuses = self._api.GetReplies()
     self.assertEqual(36657062, statuses[0].id)
 
   def testGetFriends(self):
-    '''Test the twitter.Api GetFriends method'''
+    '''Test the twitterapi.Api GetFriends method'''
     self._AddHandler('http://twitter.com/statuses/friends.json',
                      curry(self._OpenTestData, 'friends.json'))
     users = self._api.GetFriends()
@@ -374,7 +374,7 @@ class ApiTest(unittest.TestCase):
     self.assertEqual(89543882, buzz[0].id)
 
   def testGetFollowers(self):
-    '''Test the twitter.Api GetFollowers method'''
+    '''Test the twitterapi.Api GetFollowers method'''
     self._AddHandler('http://twitter.com/statuses/followers.json',
                      curry(self._OpenTestData, 'followers.json'))
     users = self._api.GetFollowers()
@@ -383,7 +383,7 @@ class ApiTest(unittest.TestCase):
     self.assertEqual(89554432, alexkingorg[0].id)
 
   def testGetFeatured(self):
-    '''Test the twitter.Api GetFeatured method'''
+    '''Test the twitterapi.Api GetFeatured method'''
     self._AddHandler('http://twitter.com/statuses/featured.json',
                      curry(self._OpenTestData, 'featured.json'))
     users = self._api.GetFeatured()
@@ -392,14 +392,14 @@ class ApiTest(unittest.TestCase):
     self.assertEqual(86991742, stevenwright[0].id)
 
   def testGetDirectMessages(self):
-    '''Test the twitter.Api GetDirectMessages method'''
+    '''Test the twitterapi.Api GetDirectMessages method'''
     self._AddHandler('http://twitter.com/direct_messages.json',
                      curry(self._OpenTestData, 'direct_messages.json'))
     statuses = self._api.GetDirectMessages()
     self.assertEqual(u'A légpárnás hajóm tele van angolnákkal.', statuses[0].text)
 
   def testPostDirectMessage(self):
-    '''Test the twitter.Api PostDirectMessage method'''
+    '''Test the twitterapi.Api PostDirectMessage method'''
     self._AddHandler('http://twitter.com/direct_messages/new.json',
                      curry(self._OpenTestData, 'direct_messages-new.json'))
     status = self._api.PostDirectMessage('test', u'Моё судно на воздушной подушке полно угрей')
@@ -407,7 +407,7 @@ class ApiTest(unittest.TestCase):
     self.assertEqual(u'Моё судно на воздушной подушке полно угрей', status.text)
 
   def testDestroyDirectMessage(self):
-    '''Test the twitter.Api DestroyDirectMessage method'''
+    '''Test the twitterapi.Api DestroyDirectMessage method'''
     self._AddHandler('http://twitter.com/direct_messages/destroy/3496342.json',
                      curry(self._OpenTestData, 'direct_message-destroy.json'))
     status = self._api.DestroyDirectMessage(3496342)
@@ -415,7 +415,7 @@ class ApiTest(unittest.TestCase):
     self.assertEqual(673483, status.sender_id)
 
   def testCreateFriendship(self):
-    '''Test the twitter.Api CreateFriendship method'''
+    '''Test the twitterapi.Api CreateFriendship method'''
     self._AddHandler('http://twitter.com/friendships/create/dewitt.json',
                      curry(self._OpenTestData, 'friendship-create.json'))
     user = self._api.CreateFriendship('dewitt')
@@ -423,7 +423,7 @@ class ApiTest(unittest.TestCase):
     self.assertEqual(673483, user.id)
 
   def testDestroyFriendship(self):
-    '''Test the twitter.Api DestroyFriendship method'''
+    '''Test the twitterapi.Api DestroyFriendship method'''
     self._AddHandler('http://twitter.com/friendships/destroy/dewitt.json',
                      curry(self._OpenTestData, 'friendship-destroy.json'))
     user = self._api.DestroyFriendship('dewitt')
@@ -431,7 +431,7 @@ class ApiTest(unittest.TestCase):
     self.assertEqual(673483, user.id)
 
   def testGetUser(self):
-    '''Test the twitter.Api GetUser method'''
+    '''Test the twitterapi.Api GetUser method'''
     self._AddHandler('http://twitter.com/users/show/dewitt.json',
                      curry(self._OpenTestData, 'show-dewitt.json'))
     user = self._api.GetUser('dewitt')

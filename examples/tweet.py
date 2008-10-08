@@ -8,7 +8,7 @@ import ConfigParser
 import getopt
 import os
 import sys
-import twitter
+import twitterapi
 
 
 USAGE = '''Usage: tweet [options] message
@@ -103,7 +103,7 @@ def main():
   password = passwordflag or GetPasswordEnv() or rc.GetPassword()
   if not username or not password:
     PrintUsageAndExit()
-  api = twitter.Api(username=username, password=password, input_encoding=encoding)
+  api = twitterapi.Api(username=username, password=password, input_encoding=encoding)
   try:
     status = api.PostUpdate(message)
   except UnicodeDecodeError:
