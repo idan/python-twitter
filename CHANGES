@@ -1,3 +1,10 @@
+2008-10-10
+
+  Cloned to git repository at http://github.com/idangazit/python-twitter
+  Patched to support since-id in timeline methods
+  Updated SAMPLE_JSON to modern content so tests don't fail spuriously
+  Renamed twitter module to twitterapi, including docs, tests, etc.
+  
 2008-07-10
 
   Added get/create/destroy favorite flags for status messages.
@@ -28,7 +35,7 @@
 2007-06-03
 
   Fixed the bug that prevented unicode strings being posted
-  Username and password now set on twitter.Api, not individual method calls
+  Username and password now set on twitterapi.Api, not individual method calls
   Added SetCredentials and ClearCredentials
   Added GetUser ("users/show" in the twitter web api)
   Added GetFeatured
