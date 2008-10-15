@@ -2,8 +2,8 @@
 
 _A python wrapper around the Twitter API_
 
-Author: `DeWitt Clinton <dewitt@google.com>`
-Github fork: `Idan Gazit <idan@pixane.net>`
+Author: *DeWitt Clinton <dewitt@google.com>*
+Github fork: *Idan Gazit <idan@pixane.net>*
 
 ##Introduction##
 
@@ -134,7 +134,21 @@ on the property setters.
 
 ##More Information##
 
-Please visit http://groups.google.com/group/python-twitter for more discussion.
+The original project is hosted at http://code.google.com/p/python-twitter/.
+Please visit http://groups.google.com/group/python-twitter for more discussion
+regarding the original version.
+
+This friendly fork incorporates several changes. It is hosted on github, at:
+
+http://github.com/idangazit/python-twitter/
+
+The new project's homepage is:
+
+http://github.com/idangazit/python-twitter/wikis
+
+and issues are tracked on [lighthouse](http://lighthouseapp.com):
+
+http://pixane.lighthouseapp.com/projects/18182-python-twitter
 
 ##Contributors##
 
