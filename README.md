@@ -3,6 +3,7 @@
 _A python wrapper around the Twitter API_
 
 Author: `DeWitt Clinton <dewitt@google.com>`
+Github fork: `Idan Gazit <idan@pixane.net>`
 
 ##Introduction##
 
@@ -24,8 +25,7 @@ http://cheeseshop.python.org/pypi/simplejson
 
 Download the latest python-twitter library from:
 
-http://code.google.com/p/python-twitter/
-
+http://github.com/idangazit/python-twitter
 
 Untar the source distribution and run:
 
@@ -46,17 +46,16 @@ Without setuptools installed:
 
 View the trunk at:
 
-http://python-twitter.googlecode.com/svn/trunk/
+http://github.com/idangazit/python-twitter/tree/master
 
 Check out the latest development version anonymously with:
 
-    $ svn checkout http://python-twitter.googlecode.com/svn/trunk/ python-twitter
+    $ git clone git://github.com/idangazit/python-twitter.git
 
 ##Documentation##
 
-View the last release API documentation at:
-
-    http://static.unto.net/python-twitter/0.6/doc/twitter.html
+The API documentation is included in the `doc` directory, in the form of
+`twitterapi.html`.
 
 ##Using##
 
