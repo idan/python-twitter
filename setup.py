@@ -5,7 +5,7 @@
 '''The setup and build script for the python-twitter library.'''
 
 __author__ = 'dewitt@google.com'
-__version__ = '0.6.1-devel'
+__version__ = '0.6.2-devel'
 
 
 # The base package metadata to be used by both distutils and setuptools
@@ -41,7 +41,7 @@ def Read(file):
   return open(file).read()
 
 def BuildLongDescription():
-  return '\n'.join([Read('README'), Read('CHANGES')])
+  return '\n'.join([Read('README.md'), Read('CHANGES')])
 
 def Main():
   # Build the long_description from the README and CHANGES

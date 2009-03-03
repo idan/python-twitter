@@ -1,3 +1,6 @@
+2009-03-03
+  Fixed setup.py, bad reference to README
+
 2008-10-10
 
   Cloned to git repository at http://github.com/idangazit/python-twitter
